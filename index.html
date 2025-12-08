@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="cursor-crosshair">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slyme-OS | Preview</title>
+    <title>Slyme-OS | v3.0 Mainframe</title>
     
-    <!-- Load Tailwind CSS -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Load Icons (Lucide) -->
+    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Configure Custom "Slime" Theme -->
+    <!-- Google Fonts (Space Mono for that coding look) -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -20,23 +22,25 @@
                         slime: {
                             50: '#f0fdf4',
                             400: '#4ade80',
-                            500: '#22c55e',
+                            500: '#39ff14', /* Neon Green */
                             600: '#16a34a',
-                            900: '#052e16',
-                            950: '#020617', // Deepest background
+                            900: '#0c1a10',
+                            950: '#050a05', /* Pitch Black */
                         }
                     },
                     fontFamily: {
-                        mono: ['Consolas', 'Monaco', 'Courier New', 'monospace'],
+                        mono: ['"Space Mono"', 'monospace'],
                     },
                     animation: {
-                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'pulse-fast': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glitch': 'glitch 1s linear infinite',
                     },
                     keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        glitch: {
+                            '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                            '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                            '62%': { transform: 'translate(0,0) skew(5deg)' },
                         }
                     }
                 }
@@ -45,206 +49,322 @@
     </script>
 
     <style>
-        /* Custom Scrollbar for Chrome/Safari/Edge */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* CRT Scanline Effect */
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 50;
+            pointer-events: none;
         }
-        ::-webkit-scrollbar-track {
-            background: #020617; 
+
+        /* Glow Text */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.3);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #16a34a; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #22c55e; 
-        }
-        
-        /* Grid Background Pattern */
-        .bg-grid-pattern {
-            background-size: 40px 40px;
-            background-image: 
-                linear-gradient(to right, rgba(34, 197, 94, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(34, 197, 94, 0.05) 1px, transparent 1px);
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050a05; }
+        ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 0px; }
+        ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
+
+        /* Cursor */
+        body { cursor: crosshair; }
+        a, button { cursor: pointer; }
+
+        /* Loader Animation */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            font-family: 'Space Mono', monospace;
+            color: #39ff14;
+            transition: opacity 0.5s ease-out;
         }
     </style>
 </head>
-<body class="bg-slime-950 min-h-screen font-mono text-white selection:bg-slime-500 selection:text-black">
+<body class="bg-slime-950 min-h-screen font-mono text-gray-300 selection:bg-slime-500 selection:text-black overflow-x-hidden">
 
-    <!-- Background Glow Effects -->
-    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div class="absolute top-0 -left-4 w-[500px] h-[500px] bg-slime-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-pulse-slow"></div>
-        <div class="absolute bottom-0 -right-4 w-[500px] h-[500px] bg-slime-400 rounded-full mix-blend-multiply filter blur-[128px] opacity-10 animate-pulse-slow" style="animation-delay: 2s;"></div>
-        <div class="absolute inset-0 bg-grid-pattern"></div>
+    <!-- 1. FAKE BOOT SCREEN -->
+    <div id="boot-screen">
+        <div id="boot-text" class="text-sm md:text-base whitespace-pre-line leading-tight opacity-80"></div>
     </div>
 
-    <main class="max-w-6xl mx-auto px-6 py-20">
+    <!-- 2. CRT OVERLAY -->
+    <div class="scanlines"></div>
+
+    <!-- 3. BACKGROUND ANIMATION -->
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-slime-600/20 rounded-full blur-[100px] animate-pulse-fast"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-slime-900/40 rounded-full blur-[120px]"></div>
+        <!-- Grid -->
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(57,255,20,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(57,255,20,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 relative z-10">
         
-        <!-- Header / Nav -->
-        <nav class="flex justify-between items-center mb-20 animate-fade-in-up">
-            <div class="text-xl font-bold tracking-tighter flex items-center gap-2">
-                <div class="w-3 h-3 bg-slime-500 rounded-full shadow-[0_0_10px_#22c55e]"></div>
-                SLYME_OS
+        <!-- HEADER -->
+        <nav class="flex justify-between items-center mb-16 border-b border-slime-900/50 pb-6 backdrop-blur-sm">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="relative w-8 h-8 flex items-center justify-center bg-slime-900/80 border border-slime-500/50 rounded overflow-hidden group-hover:border-slime-500 transition-colors">
+                    <i data-lucide="terminal" class="w-4 h-4 text-slime-500"></i>
+                </div>
+                <span class="text-xl font-bold tracking-widest text-white group-hover:text-glow transition-all">
+                    SLYME<span class="text-slime-500 animate-pulse">_</span>OS
+                </span>
             </div>
-            <div class="flex gap-6 text-sm text-gray-400">
-                <a href="#" class="hover:text-slime-400 transition-colors">/root</a>
-                <a href="#projects" class="hover:text-slime-400 transition-colors">/modules</a>
-                <a href="#" class="hover:text-slime-400 transition-colors">/logs</a>
+            
+            <div class="hidden md:flex items-center gap-6 text-xs uppercase tracking-widest">
+                <div class="flex items-center gap-2 px-3 py-1 bg-slime-900/30 border border-slime-500/20 rounded text-slime-500">
+                    <span class="w-2 h-2 bg-slime-500 rounded-full animate-pulse"></span>
+                    Online
+                </div>
+                <span id="clock" class="text-gray-400">00:00:00</span>
             </div>
         </nav>
 
-        <!-- Hero Section -->
-        <section class="mb-32 flex flex-col items-start gap-6 animate-fade-in-up" style="animation-delay: 0.1s;">
-            <!-- Status Pill -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slime-900/30 border border-slime-500/20 text-slime-400 text-xs tracking-wider uppercase backdrop-blur-md">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slime-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-slime-500"></span>
-                </span>
-                System Operational
-            </div>
+        <!-- HERO SECTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-32 items-center">
             
-            <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">
-                Slyme<span class="text-slime-500">.</span>OS
-            </h1>
-            
-            <p class="text-xl text-gray-400 max-w-2xl leading-relaxed">
-                <span class="text-slime-500">>></span> Initializing developer environment.<br>
-                Exploring the boundaries of embedded systems, PicoVision, and retro-futuristic interfaces.
-            </p>
-            
-            <div class="flex flex-wrap gap-4 mt-6">
-                <a href="https://github.com/slyme-os" target="_blank" class="group px-6 py-3 bg-slime-500 hover:bg-slime-400 text-black font-bold rounded flex items-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-                    <i data-lucide="github" class="w-5 h-5"></i> 
-                    GitHub Profile
-                </a>
-                <a href="#projects" class="px-6 py-3 border border-gray-700 text-gray-300 rounded hover:border-slime-500 hover:text-slime-400 hover:bg-slime-900/20 transition-all">
-                    Initialize Modules
-                </a>
-            </div>
-        </section>
-
-        <!-- Bento Grid Projects Section -->
-        <section id="projects" class="animate-fade-in-up" style="animation-delay: 0.3s;">
-            <div class="flex items-center gap-4 mb-8">
-                <i data-lucide="cpu" class="text-slime-500"></i>
-                <h2 class="text-2xl font-bold">Active Modules</h2>
-                <div class="h-px bg-gray-800 flex-grow"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[240px]">
+            <!-- Text Content -->
+            <div class="space-y-6">
+                <div class="inline-block px-2 py-1 bg-slime-500 text-black text-xs font-bold uppercase mb-2">
+                    Kernel v3.1 Loaded
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight">
+                    <span id="typewriter" class="text-glow"></span><span class="text-slime-500 animate-pulse">_</span>
+                </h1>
+                <p class="text-lg text-gray-400 max-w-lg leading-relaxed border-l-2 border-slime-500/30 pl-4">
+                    Specializing in embedded systems, <span class="text-slime-500">PicoVision</span> architecture, and retro-futuristic software design.
+                </p>
                 
-                <!-- Large Card: Main Project -->
-                <div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-3xl bg-gray-900/30 border border-gray-800 hover:border-slime-500/50 transition-all duration-500 backdrop-blur-sm">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/90 z-10"></div>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="https://github.com/slyme-os" target="_blank" class="relative overflow-hidden px-8 py-3 bg-slime-500 text-black font-bold uppercase tracking-wider hover:bg-white transition-colors group">
+                        <span class="relative z-10 flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> GitHub</span>
+                    </a>
+                    <a href="#projects" class="px-8 py-3 border border-gray-600 hover:border-slime-500 text-gray-300 hover:text-slime-500 uppercase tracking-wider transition-all">
+                        ./View_Modules
+                    </a>
+                </div>
+            </div>
+
+            <!-- Interactive Terminal Visual -->
+            <div class="relative group">
+                <!-- Decorative blurred background -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-slime-500 to-emerald-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                
+                <!-- Terminal Window -->
+                <div class="relative bg-black border border-gray-800 rounded-lg overflow-hidden shadow-2xl">
+                    <!-- Terminal Header -->
+                    <div class="bg-gray-900 px-4 py-2 flex items-center gap-2 border-b border-gray-800">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 ml-2 font-sans">user@slyme-os:~</div>
+                    </div>
+                    <!-- Terminal Body -->
+                    <div class="p-4 h-64 overflow-y-auto text-xs md:text-sm font-mono text-gray-300">
+                        <p class="mb-1"><span class="text-slime-500">user@slyme-os:~$</span> ./init_portfolio.sh</p>
+                        <p class="mb-1 text-gray-500">> Loading assets...</p>
+                        <p class="mb-1 text-gray-500">> Connecting to GitHub API...</p>
+                        <p class="mb-1 text-slime-500">> SUCCESS: Connection established.</p>
+                        <p class="mb-1"><span class="text-slime-500">user@slyme-os:~$</span> cat stats.txt</p>
+                        <div class="p-2 bg-gray-900/50 border-l-2 border-slime-500 my-2">
+                            LANGUAGES: Python, C++, Lua<br>
+                            TARGETS: RP2040, ESP32, Web<br>
+                            STATUS: Seeking Collaboration
+                        </div>
+                        <p class="mb-1 animate-pulse"><span class="text-slime-500">user@slyme-os:~$</span> <span class="w-2 h-4 bg-slime-500 inline-block align-middle"></span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BENTO GRID -->
+        <section id="projects" class="space-y-8">
+            <div class="flex items-end justify-between border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-white flex items-center gap-3">
+                        <i data-lucide="cpu" class="text-slime-500"></i>
+                        SYSTEM MODULES
+                    </h2>
+                </div>
+                <div class="text-xs text-gray-500 font-mono">DIR: /home/projects</div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
+                
+                <!-- Project 1: Core OS (Large) -->
+                <div class="group md:col-span-2 md:row-span-2 relative overflow-hidden rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 transition-all duration-300">
+                    <!-- Hover Effect -->
+                    <div class="absolute inset-0 bg-slime-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     
-                    <!-- Content -->
-                    <div class="absolute p-8 bottom-0 z-20 w-full">
-                        <div class="flex justify-between items-end">
-                            <div>
-                                <div class="bg-slime-500/10 text-slime-400 text-xs px-2 py-1 rounded inline-block mb-3 border border-slime-500/20">v2.0.4 Stable</div>
-                                <h3 class="text-3xl font-bold text-white mb-2 group-hover:text-slime-400 transition-colors">Slyme OS Core</h3>
-                                <p class="text-gray-400 mb-4 text-sm leading-relaxed max-w-md">
-                                    Custom app launcher for PicoVision. 32-color mode support, interlaced rendering, and Python-based app structure.
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-full bg-white/5 border border-white/10 group-hover:bg-slime-500 group-hover:text-black transition-all">
-                                <i data-lucide="arrow-up-right"></i>
-                            </div>
-                        </div>
+                    <div class="absolute top-4 right-4 text-gray-700">
+                        <i data-lucide="grid-3x3" class="w-24 h-24 opacity-20"></i>
                     </div>
 
-                    <!-- Decorative Background Image/Gradient -->
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-slime-900/40 to-transparent opacity-50"></div>
-                    <div class="absolute top-8 right-8 text-gray-800 opacity-20 group-hover:opacity-40 transition-opacity">
-                        <i data-lucide="terminal" class="w-32 h-32"></i>
+                    <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black via-black/90 to-transparent">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-slime-900 text-slime-400 text-[10px] border border-slime-500/30 uppercase">Flagship</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-white mb-2 group-hover:text-slime-400 transition-colors">Slyme OS Core</h3>
+                        <p class="text-gray-400 text-sm mb-4 max-w-md">
+                            The heart of the ecosystem. A custom Python-based operating environment designed specifically for PicoVision hardware with 32-color interlaced output.
+                        </p>
+                        <a href="#" class="inline-flex items-center gap-2 text-slime-500 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors">
+                            Access Source <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Tall Card: Tech Stack -->
-                <div class="md:col-span-1 md:row-span-2 relative overflow-hidden rounded-3xl bg-gray-900/30 border border-gray-800 p-6 flex flex-col hover:border-gray-600 transition-all">
-                    <h3 class="text-lg font-bold mb-4 text-gray-200">Tech Stack</h3>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-white/5 rounded-lg border border-white/5 flex items-center gap-3">
-                            <i data-lucide="code-2" class="text-slime-400 w-5 h-5"></i>
-                            <span class="text-sm">MicroPython</span>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded-lg border border-white/5 flex items-center gap-3">
-                            <i data-lucide="cpu" class="text-slime-400 w-5 h-5"></i>
-                            <span class="text-sm">RP2040</span>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded-lg border border-white/5 flex items-center gap-3">
-                            <i data-lucide="box" class="text-slime-400 w-5 h-5"></i>
-                            <span class="text-sm">C++ SDK</span>
-                        </div>
-                        <div class="p-3 bg-white/5 rounded-lg border border-white/5 flex items-center gap-3">
-                            <i data-lucide="monitor" class="text-slime-400 w-5 h-5"></i>
-                            <span class="text-sm">PicoVision</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Small Card: Stats -->
-                <div class="relative overflow-hidden rounded-3xl bg-slime-500 border border-slime-400 p-6 flex flex-col justify-center items-center text-center group">
-                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                <!-- Widget: Time/Date -->
+                <div class="relative rounded-xl bg-black border border-gray-800 p-6 flex flex-col justify-center items-center text-center overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/xT9IgusfVcQH5TSMMA/giphy.gif')] bg-cover opacity-5"></div>
                     <div class="relative z-10">
-                        <h3 class="text-5xl font-bold text-black mb-1">100%</h3>
-                        <p class="text-black/70 font-bold text-sm uppercase tracking-wide">Open Source</p>
+                        <i data-lucide="clock" class="w-6 h-6 text-slime-500 mx-auto mb-2"></i>
+                        <h3 class="text-white text-xl font-bold" id="widget-date">...</h3>
+                        <p class="text-gray-500 text-xs mt-1">SYSTEM TIME</p>
                     </div>
                 </div>
 
-                <!-- Small Card: Documentation Link -->
-                <a href="#" class="group relative overflow-hidden rounded-3xl bg-gray-900/30 border border-gray-800 hover:border-slime-500 transition-all p-6 flex flex-col justify-between">
+                <!-- Project 2: Cyberdeck -->
+                <div class="md:col-span-1 relative rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 transition-all p-6 flex flex-col justify-between group">
                     <div class="flex justify-between items-start">
-                        <i data-lucide="book" class="text-gray-500 group-hover:text-slime-400 transition-colors"></i>
-                        <i data-lucide="arrow-right" class="text-gray-600 group-hover:translate-x-1 transition-transform"></i>
+                        <i data-lucide="hard-drive" class="text-gray-500 group-hover:text-slime-500 transition-colors"></i>
+                        <span class="text-[10px] text-gray-600 border border-gray-800 px-1 rounded">HARDWARE</span>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-slime-400">Docs</h3>
-                        <p class="text-xs text-gray-500">Read the manual</p>
+                        <h3 class="text-lg font-bold text-white group-hover:text-slime-400">Slimedeck Zero</h3>
+                        <p class="text-xs text-gray-500 mt-1">Portable cyberdeck build logs.</p>
                     </div>
+                </div>
+
+                <!-- Project 3: Documentation -->
+                <a href="#" class="md:col-span-2 relative rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 hover:bg-slime-900/10 transition-all p-6 flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-gray-800 rounded group-hover:bg-slime-500 group-hover:text-black transition-colors">
+                            <i data-lucide="book-open" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Documentation / Wiki</h3>
+                            <p class="text-sm text-gray-400">Installation guides, API references, and schematics.</p>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-600 group-hover:text-slime-500 group-hover:translate-x-1 transition-transform"></i>
                 </a>
 
-                <!-- Wide Card: Another Project -->
-                <div class="md:col-span-2 relative overflow-hidden rounded-3xl bg-gray-900/30 border border-gray-800 hover:border-slime-500/50 transition-all p-8 flex flex-col justify-center">
-                    <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-slime-900/20 to-transparent"></div>
-                    <div class="relative z-10">
-                        <div class="flex items-center gap-2 mb-2 text-slime-400">
-                            <i data-lucide="hard-drive" class="w-4 h-4"></i>
-                            <span class="text-xs font-bold uppercase tracking-wider">Hardware</span>
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-2">Slimedeck Zero</h3>
-                        <p class="text-gray-400 max-w-sm text-sm">
-                            The original mini cyberdeck project. Complete build logs, STL files, and wiring diagrams available.
-                        </p>
-                    </div>
-                </div>
-
-                 <!-- Wide Card: Contact/Social -->
-                 <div class="md:col-span-2 relative overflow-hidden rounded-3xl bg-gray-900/30 border border-gray-800 hover:border-gray-600 transition-all p-8 flex items-center justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Join the Network</h3>
-                        <p class="text-gray-500 text-sm">Follow development updates</p>
-                    </div>
-                    <div class="flex gap-3">
-                        <a href="#" class="p-3 bg-gray-800 rounded-full hover:bg-slime-500 hover:text-black transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                        <a href="#" class="p-3 bg-gray-800 rounded-full hover:bg-slime-500 hover:text-black transition-colors"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                        <a href="#" class="p-3 bg-gray-800 rounded-full hover:bg-slime-500 hover:text-black transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></a>
+                <!-- Tech Stack Chips -->
+                <div class="md:col-span-2 relative rounded-xl bg-gray-900/40 border border-gray-800 p-6 flex flex-col justify-center">
+                    <h3 class="text-sm text-gray-400 mb-4 uppercase tracking-widest">Tech Stack</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">MicroPython</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">C/C++ SDK</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">Raspberry Pi RP2040</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">CircuitPython</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">Astro</span>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <footer class="mt-32 pt-8 border-t border-gray-900 text-center text-gray-600 text-sm font-mono">
-            <p>&copy; 2024 Slyme-OS. System Ready.</p>
+        <!-- FOOTER -->
+        <footer class="mt-32 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
+            <p>&copy; 2024 Slyme-OS Foundation. <span class="text-slime-900">End of Line.</span></p>
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-slime-500 transition-colors">Twitter</a>
+                <a href="#" class="hover:text-slime-500 transition-colors">Discord</a>
+                <a href="#" class="hover:text-slime-500 transition-colors">Email</a>
+            </div>
         </footer>
 
     </main>
 
-    <!-- Initialize Icons -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
+        // 1. Initialize Icons
         lucide.createIcons();
+
+        // 2. Typewriter Effect
+        const text = "ADVANCED_DEVELOPER_ENVIRONMENT";
+        const typeWriterElement = document.getElementById('typewriter');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                typeWriterElement.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50); // Speed of typing
+            }
+        }
+
+        // 3. Live Clock & Date
+        function updateTime() {
+            const now = new Date();
+            // Clock
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
+            // Date Widget
+            const options = { weekday: 'short', day: 'numeric', month: 'short' };
+            document.getElementById('widget-date').innerText = now.toLocaleDateString('en-US', options).toUpperCase();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // 4. Boot Sequence Logic
+        const bootScreen = document.getElementById('boot-screen');
+        const bootText = document.getElementById('boot-text');
+        
+        const bootLog = [
+            "BIOS DATE 01/01/24 15:23:44 VER 1.0.2",
+            "CPU: RP2040 DUAL CORE ARM CORTEX M0+",
+            "DETECTING PRIMARY MASTER ... SLYME_OS_CORE",
+            "CHECKING NVRAM ... OK",
+            "LOADING KERNEL MODULES ...",
+            "..........................",
+            "VIDEO ADAPTER: PICOVISION 32-BIT",
+            "INITIALIZING GUI ...",
+            "BOOT COMPLETE."
+        ];
+
+        let lineIndex = 0;
+        
+        function runBootSequence() {
+            if (lineIndex < bootLog.length) {
+                bootText.innerHTML += bootLog[lineIndex] + "\n";
+                lineIndex++;
+                // Random delay between lines to look real
+                setTimeout(runBootSequence, Math.random() * 300 + 100);
+            } else {
+                // Fade out boot screen
+                setTimeout(() => {
+                    bootScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        bootScreen.style.display = 'none';
+                        // Start main typewriter after boot
+                        setTimeout(typeWriter, 500);
+                    }, 500);
+                }, 800);
+            }
+        }
+
+        // Start everything
+        window.addEventListener('load', runBootSequence);
+
     </script>
 </body>
 </html>
