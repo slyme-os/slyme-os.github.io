@@ -2,14 +2,27 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { Message } from '../types';
 
 export class GeminiService {
-  private ai: GoogleGenAI;
+  private ai: GoogleGenAI | null = null;
   private modelId = 'gemini-2.5-flash';
 
   constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    try {
+      // Check if key exists to prevent immediate crash
+      if (process.env.API_KEY) {
+        this.ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      } else {
+        console.warn("SLYME OS: No API Key detected. AI features will be simulated.");
+      }
+    } catch (error) {
+      console.error("Failed to initialize AI:", error);
+    }
   }
 
   async sendMessage(history: Message[], userMessage: string): Promise<string> {
+    if (!this.ai) {
+      return "ERROR: API_KEY not found. \nTo enable AI, please set your Google Gemini API Key in the environment variables.\n\n> System running in OFFLINE mode.";
+    }
+
     try {
       const chat = this.ai.chats.create({
         model: this.modelId,

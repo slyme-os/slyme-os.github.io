@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TerminalHero } from './components/TerminalHero';
 import { Features } from './components/Features';
 import { AIChatTerminal } from './components/AIChatTerminal';
 import { Footer } from './components/Footer';
 import { SlymeLogo } from './components/SlymeLogo';
+import { ChevronRight } from 'lucide-react';
 
 function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white scanlines font-mono selection:bg-slyme-green selection:text-black">
       {/* Sticky Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-black/95 backdrop-blur border-b border-slyme-green/20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 group cursor-pointer">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between relative">
+          <div className="flex items-center gap-3 group cursor-pointer z-20">
             <div className="relative">
               <div className="absolute inset-0 bg-slyme-green blur-md opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-full"></div>
               <SlymeLogo className="w-8 h-8 md:w-10 md:h-10 relative z-10" animated={false} />
@@ -20,15 +27,56 @@ function App() {
               SLYME<span className="text-slyme-green">_OS</span>
             </span>
           </div>
+
+          {/* Desktop Menu */}
           <div className="hidden md:flex gap-8 text-sm text-gray-400 font-mono">
             <a href="#" className="hover:text-slyme-green transition-colors hover:shadow-[0_2px_0_0_#00ff41]">/home</a>
             <a href="#" className="hover:text-slyme-green transition-colors hover:shadow-[0_2px_0_0_#00ff41]">/features</a>
             <a href="#" className="hover:text-slyme-green transition-colors hover:shadow-[0_2px_0_0_#00ff41]">/docs</a>
             <a href="#" className="text-black bg-slyme-green px-4 py-1 hover:bg-white transition-colors font-bold">/download</a>
           </div>
-          {/* Mobile Menu Icon Placeholder */}
-          <div className="md:hidden text-slyme-green cursor-pointer">
-             <span className="text-xl font-bold">Menu_</span>
+
+          {/* Mobile Menu Toggle */}
+          <div className="md:hidden z-20">
+             <button 
+               onClick={toggleMenu}
+               className="text-slyme-green hover:text-white transition-colors focus:outline-none flex items-center gap-2 select-none"
+             >
+               <span className="text-xl font-bold font-display tracking-widest">
+                 {isMobileMenuOpen ? 'Close_[x]' : 'Menu_'}
+               </span>
+             </button>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          <div className={`md:hidden absolute top-16 left-0 w-full bg-black/98 border-b border-slyme-green/30 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden shadow-[0_10px_30px_rgba(0,255,65,0.1)] ${isMobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+             <div className="flex flex-col p-6 space-y-3 font-mono">
+                {['home', 'features', 'docs'].map((item) => (
+                  <a 
+                    key={item}
+                    href="#" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between p-4 border border-slyme-green/10 bg-slyme-dim/30 hover:border-slyme-green hover:bg-slyme-green/10 text-gray-300 hover:text-slyme-green transition-all group rounded-sm"
+                  >
+                     <span className="text-lg">/{item}</span>
+                     <ChevronRight size={18} className="text-slyme-green opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  </a>
+                ))}
+                
+                <a 
+                  href="#" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="mt-4 flex items-center justify-center gap-2 bg-slyme-green text-black font-bold p-4 uppercase tracking-widest hover:bg-white transition-colors shadow-[0_0_15px_rgba(0,255,65,0.4)] rounded-sm"
+                >
+                   <span>Download_ISO</span>
+                   <span className="animate-pulse">_</span>
+                </a>
+                
+                <div className="pt-4 flex justify-between text-xs text-gray-600 font-mono border-t border-gray-900 mt-2">
+                   <span>v1.0.4</span>
+                   <span>System: <span className="text-slyme-green">ONLINE</span></span>
+                </div>
+             </div>
           </div>
         </div>
       </nav>
