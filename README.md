@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# SLYME-OS Website (GitHub Pages)
 
-# Run and deploy your AI Studio app
+This is a static GitHub Pages site for SLYME-OS with a hacker/terminal aesthetic.
+Files included:
+- index.html
+- assets/css/style.css
+- assets/js/main.js
+- 404.html
 
-This contains everything you need to run your app locally.
+Preview locally:
+- Using Python 3:
+  - python -m http.server 8000
+  - open http://localhost:8000
+- Or with npm:
+  - npx http-server -p 8000
 
-View your app in AI Studio: https://ai.studio/apps/drive/1pbNxKeRr3ZWrcrCt0zUtVtuKfmJHwSEM
+Push to your GitHub Pages repository (replace branch if needed):
+1. Copy files into your repository root (index.html) and assets/ folder.
+2. Commit and push:
+   git add .
+   git commit -m "Add GitHub Pages site: hacker terminal theme"
+   git push origin main
 
-## Run Locally
+Notes:
+- Replace the Download (ISO) button href in index.html with the real URL to your ISO or installer.
+- Update copy, links, screenshots, and documentation links to match your project.
+- If you use a custom domain, add a CNAME file with the domain in the repo root.
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Want me to open a branch/PR with these files added to slyme-os/slyme-os.github.io? I can prepare the commit and push it for you if you'd like.
