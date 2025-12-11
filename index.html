@@ -1,746 +1,414 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYME-OS // MAINFRAME TERMINAL</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SLYME‑OS — Mainframe Studio · Local AI · Privacy</title>
+  <meta name="description" content="SLYME-OS — Arch-based, privacy-first OS with local AI (Ollama). Hacker/terminal aesthetic, neon slime theme." />
 
-        :root {
-            --neon-green: #00ff00;
-            --neon-pink: #ff00ff;
-            --neon-cyan: #00ffff;
-            --neon-purple: #9d00ff;
-            --slime-green: #00ff41;
-            --dark-bg: #0a0e27;
-            --grid-color: #1a1f3a;
-            --text-primary: #00ff00;
-            --text-secondary: #00aa00;
-        }
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background-color: var(--dark-bg);
-            color: var(--text-primary);
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-        }
+  <style>
+    :root{
+      --bg:#060814;
+      --panel:#07101a;
+      --glass: rgba(255,255,255,0.03);
+      --slime: #00f07a;
+      --accent: #19f0ff;
+      --muted:#7b8790;
+      --mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+      --ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--ui);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(0,240,122,0.04), transparent 10%),
+        radial-gradient(900px 500px at 90% 80%, rgba(25,240,255,0.02), transparent 8%),
+        var(--bg);
+      color: #dfffe8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-y:auto;
+      line-height:1.4;
+    }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            background-image: 
-                linear-gradient(0deg, transparent 24%, rgba(255, 0, 255, 0.05) 25%, rgba(255, 0, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 0, 255, 0.05) 75%, rgba(255, 0, 255, 0.05) 76%, transparent 77%, transparent),
-                linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, 0.05) 25%, rgba(0, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.05) 75%, rgba(0, 255, 255, 0.05) 76%, transparent 77%, transparent);
-            background-size: 50px 50px;
-            box-shadow: inset 0 0 50px rgba(0, 255, 255, 0.1);
-        }
+    /* Subtle matrix - canvas sits behind content */
+    #matrix {
+      position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.18;
+      mix-blend-mode:screen;
+    }
 
-        /* CRT Scanlines Effect */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15),
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            pointer-events: none;
-            z-index: 9999;
-        }
+    .wrap{
+      position:relative;
+      max-width:1100px;
+      margin:6vh auto;
+      padding:28px;
+      z-index:2;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:22px;
+      align-items:start;
+    }
 
-        /* Vignette effect */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
-            pointer-events: none;
-            z-index: 9998;
-        }
+    /* SIDEBAR */
+    .sidebar{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius: var(--radius);
+      padding:18px;
+      border:1px solid rgba(0,255,122,0.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      font-family:var(--mono);
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center; margin-bottom:12px;
+    }
+    .logo{
+      width:56px; height:56px; border-radius:10px;
+      background:linear-gradient(135deg,var(--slime),var(--accent));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800; color:#02120a; font-family:var(--mono); font-size:20px;
+      box-shadow:0 8px 22px rgba(0,240,122,0.06);
+    }
+    .brand h1{font-size:16px;margin:0}
+    .brand p{margin:0;color:var(--muted);font-size:12px}
 
-        .boot-sequence {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--dark-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 1;
-            transition: opacity 1s ease-out 3s;
-            pointer-events: none;
-        }
+    .nav{margin-top:18px; display:flex; flex-direction:column; gap:8px}
+    .nav button, .nav a{
+      text-align:left; padding:10px 12px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03);
+      color:#e9fff3; text-decoration:none; font-weight:600; font-size:13px; cursor:pointer;
+    }
+    .nav button.active, .nav button:hover, .nav a:hover{
+      box-shadow: 0 10px 26px rgba(0,240,122,0.04);
+      transform:translateY(-3px);
+      border-color:rgba(0,240,122,0.12);
+      background: linear-gradient(90deg, rgba(0,240,122,0.04), rgba(25,240,255,0.02));
+      color:var(--slime);
+    }
 
-        .boot-sequence.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+    .sidebar .small{color:var(--muted); font-size:12px; margin-top:12px}
 
-        .boot-text {
-            text-align: center;
-            font-size: 14px;
-            line-height: 1.8;
-            max-width: 600px;
-            padding: 20px;
-        }
+    /* MAIN */
+    .main{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius:var(--radius);
+      padding:20px;
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      min-height:520px;
+    }
 
-        .boot-text p {
-            min-height: 20px;
-            color: var(--text-primary);
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
+    /* Top hero area */
+    .hero{
+      display:flex; gap:18px; align-items:flex-start; margin-bottom:18px;
+    }
+    .hero .headline{
+      flex:1;
+    }
+    .kicker{
+      display:inline-block; padding:6px 10px; background:rgba(0,255,122,0.06); color:var(--slime); border-radius:8px; font-weight:700; font-size:12px;
+    }
+    h2{
+      margin:8px 0 6px 0; font-size:28px; color:var(--slime);
+      text-shadow: 0 4px 18px rgba(0,240,122,0.06);
+      font-family:var(--mono);
+    }
+    p.lead{margin:0;color:var(--muted);max-width:58ch; font-size:15px}
 
-        .typewriter {
-            overflow: hidden;
-            border-right: 3px solid var(--text-primary);
-            white-space: nowrap;
-            animation: blink 0.7s infinite;
-        }
+    .hero-actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; gap:10px; align-items:center; padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:700; font-size:13px;
+      border:1px solid rgba(255,255,255,0.04); background:transparent; color: #e9fff3; cursor:pointer;
+    }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(0,240,122,0.08), rgba(25,240,255,0.04));
+      color:var(--slime); border-color:rgba(0,240,122,0.14);
+    }
+    .btn.ghost{border-color:rgba(255,255,255,0.02); color:var(--muted)}
 
-        @keyframes blink {
-            0%, 49% { border-right-color: var(--text-primary); }
-            50%, 100% { border-right-color: transparent; }
-        }
+    /* Terminal preview */
+    .preview{
+      width:420px; min-width:300px; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.1));
+      border-radius:10px; border:1px solid rgba(0,255,122,0.06); overflow:hidden; box-shadow:0 18px 40px rgba(0,0,0,0.6);
+      font-family:var(--mono);
+    }
+    .term-header{display:flex; gap:8px; align-items:center; padding:10px; background:linear-gradient(90deg, rgba(0,0,0,0.3), rgba(255,255,255,0.01)); border-bottom:1px solid rgba(255,255,255,0.02)}
+    .dots{display:flex; gap:6px}
+    .dot{width:12px;height:12px;border-radius:50%}
+    .dot.r{background:#ff5f56}
+    .dot.y{background:#ffbd2e}
+    .dot.g{background:#00ca56}
+    .term-body{padding:14px; min-height:220px; color:#9fffd9; font-size:13px; line-height:1.6; background:linear-gradient(180deg, rgba(0,0,0,0.02), transparent)}
+    .term-line{white-space:pre-wrap; margin-bottom:8px}
+    .muted{color:var(--muted); font-family:var(--ui); font-weight:600}
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            padding: 20px;
-            gap: 20px;
-            overflow-y: auto;
-            z-index: 1;
-        }
+    /* Features grid */
+    .features{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:8px}
+    .card{
+      padding:14px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border:1px solid rgba(255,255,255,0.02);
+      transition:transform .14s ease, box-shadow .14s ease;
+    }
+    .card:hover{transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,240,122,0.04)}
+    .card h4{margin:0 0 8px 0; color:var(--slime); font-family:var(--mono)}
+    .card p{margin:0;color:var(--muted); font-size:14px}
 
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 20px;
-            border: 2px solid var(--neon-cyan);
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 255, 0, 0.05));
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            border-radius: 5px;
-            animation: glitch 3s infinite;
-        }
+    /* Footer */
+    .site-footer{display:flex; justify-content:space-between; align-items:center; margin-top:18px; color:var(--muted); font-size:13px; gap:18px; flex-wrap:wrap}
 
-        .header h1 {
-            font-size: 32px;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-pink);
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
+    /* Responsive */
+    @media (max-width:1000px){
+      .wrap{grid-template-columns:1fr; padding:18px}
+      .preview{width:100%}
+      .features{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:600px){
+      .features{grid-template-columns:1fr}
+      h2{font-size:22px}
+    }
 
-        .header p {
-            color: var(--neon-green);
-            font-size: 12px;
-            letter-spacing: 2px;
-        }
-
-        @keyframes glitch {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-2px); }
-            40% { transform: translateX(2px); }
-            60% { transform: translateX(-1px); }
-            80% { transform: translateX(1px); }
-        }
-
-        /* Bento Grid Layout */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            flex: 1;
-        }
-
-        .bento-item {
-            border: 2px solid var(--neon-green);
-            background: linear-gradient(135deg, rgba(0, 255, 65, 0.05), rgba(157, 0, 255, 0.05));
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.05);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .bento-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .bento-item:hover {
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4), inset 0 0 20px rgba(255, 0, 255, 0.1);
-            transform: translateY(-5px);
-        }
-
-        .bento-item.large {
-            grid-column: span 2;
-        }
-
-        @media (max-width: 768px) {
-            .bento-item.large {
-                grid-column: span 1;
-            }
-        }
-
-        .terminal-window {
-            border: 2px solid var(--neon-cyan);
-            background: rgba(10, 14, 39, 0.8);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .terminal-header {
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--dark-bg);
-            font-weight: bold;
-        }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: var(--dark-bg);
-        }
-
-        .terminal-content {
-            padding: 15px;
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--neon-green);
-        }
-
-        .terminal-line {
-            margin-bottom: 8px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .prompt {
-            color: var(--neon-cyan);
-            flex-shrink: 0;
-        }
-
-        .command {
-            color: var(--neon-green);
-        }
-
-        .output {
-            color: var(--text-secondary);
-            opacity: 0.8;
-        }
-
-        /* Title Styles */
-        .bento-title {
-            font-size: 16px;
-            color: var(--neon-pink);
-            margin-bottom: 12px;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-            letter-spacing: 2px;
-            border-bottom: 1px solid var(--neon-pink);
-            padding-bottom: 8px;
-        }
-
-        .bento-text {
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-        }
-
-        .link {
-            color: var(--neon-cyan);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
-        }
-
-        .link:hover {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
-        }
-
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            border-top: 2px solid var(--neon-green);
-            background: rgba(0, 255, 0, 0.05);
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: auto;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--neon-green);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .grid-3-2 {
-            grid-column: span 3;
-        }
-
-        @media (max-width: 1024px) {
-            .grid-3-2 {
-                grid-column: span 2;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .grid-3-2 {
-                grid-column: span 1;
-            }
-            .bento-item {
-                padding: 15px;
-                font-size: 12px;
-            }
-            .header h1 {
-                font-size: 24px;
-            }
-        }
-
-        /* Stats Display */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .stat-item {
-            border: 1px solid var(--neon-cyan);
-            padding: 10px;
-            text-align: center;
-            background: rgba(0, 255, 255, 0.05);
-            border-radius: 3px;
-        }
-
-        .stat-value {
-            color: var(--neon-pink);
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 10px;
-            margin-top: 5px;
-        }
-
-        /* Animation Classes */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .glow-text {
-            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
-            50% { text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
-        }
-
-        /* Icon/Symbol styling */
-        .symbol {
-            display: inline-block;
-            color: var(--neon-cyan);
-            margin-right: 5px;
-        }
-    </style>
+    /* small touches */
+    .badge{font-size:11px;background:rgba(0,255,122,0.05);color:var(--slime);padding:6px 8px;border-radius:8px;font-family:var(--mono);display:inline-block}
+    a.link{color:var(--accent); text-decoration:none}
+    .muted-2{color:#9aa6b0;font-size:13px}
+  </style>
 </head>
 <body>
-    <!-- Boot Sequence Screen -->
-    <div class="boot-sequence" id="bootSequence">
-        <div class="boot-text">
-            <p id="bootLine1"></p>
-            <p id="bootLine2"></p>
-            <p id="bootLine3"></p>
-            <p id="bootLine4"></p>
-            <p id="bootLine5"></p>
+  <canvas id="matrix"></canvas>
+
+  <div class="wrap" role="main">
+    <!-- LEFT: sidebar -->
+    <aside class="sidebar" aria-labelledby="sidebar-title">
+      <div class="brand" id="sidebar-title">
+        <div class="logo">S</div>
+        <div>
+          <h1>SLYME‑OS</h1>
+          <p class="muted-2">Privacy-first · Local AI · Open source</p>
         </div>
-    </div>
+      </div>
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Header -->
-        <div class="header fade-in">
-            <h1>⚡ SLYME-OS MAINFRAME ⚡</h1>
-            <p>>>> NEURAL SYNTHESIS ENGINE v.2025 <<<</p>
-            <p>SYSTEM STATUS: [ONLINE] | UPTIME: 99.9% | SLIME INTENSITY: MAXIMUM</p>
-        </div>
+      <nav class="nav" aria-label="Primary">
+        <button class="active" data-scroll="#home">Studio</button>
+        <button data-scroll="#features">Features</button>
+        <a href="https://slyme-os.github.io/docs/" target="_blank">Docs</a>
+        <a href="https://github.com/slyme-os/slyme-os" target="_blank">Repository</a>
+      </nav>
 
-        <!-- Bento Grid -->
-        <div class="bento-grid">
-            <!-- Terminal 1: System Info -->
-            <div class="bento-item terminal-window fade-in">
-                <div class="terminal-header">
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    SYSTEM_INFO.sh
-                </div>
-                <div class="terminal-content">
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">uname -a</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">SLYME-OS v.2025 | Neuro-Linux</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">whoami</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">slyme-os@mainframe</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">date</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">2025-12-11 16:34:43 UTC</span>
-                    </div>
-                </div>
-            </div>
+      <div class="small muted-2" style="margin-top:14px">
+        <div style="margin-bottom:6px"><strong>Local AI:</strong> Ollama</div>
+        <div style="font-size:13px">Run models locally. No telemetry. Full control.</div>
+      </div>
 
-            <!-- Project Description -->
-            <div class="bento-item fade-in">
-                <div class="bento-title"><span class="symbol">[!]</span>ABOUT SLYME-OS</div>
-                <div class="bento-text">
-                    A neural synthesis engine designed for creative data transformation and aesthetic computing. Built on mainframe principles with a slime-infused neon aesthetic.
-                </div>
-                <div class="stats-grid" style="margin-top: 15px;">
-                    <div class="stat-item">
-                        <div class="stat-value">∞</div>
-                        <div class="stat-label">Potential</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">99.9%</div>
-                        <div class="stat-label">Slime Rate</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">24/7</div>
-                        <div class="stat-label">Online</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">LIVE</div>
-                        <div class="stat-label">Status</div>
-                    </div>
-                </div>
-            </div>
+      <div style="margin-top:18px; display:flex; gap:8px;">
+        <button id="downloadBtn" class="btn primary" style="flex:1">Download ISO</button>
+        <a href="#" class="btn ghost" title="Contact" style="padding:10px;border-radius:10px">Contact</a>
+      </div>
 
-            <!-- Terminal 2: Core Systems -->
-            <div class="bento-item terminal-window fade-in">
-                <div class="terminal-header">
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    CORE_SYSTEMS.log
-                </div>
-                <div class="terminal-content">
-                    <div class="terminal-line">
-                        <span class="output">[✓] Neural Network: ACTIVE</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">[✓] Neon Driver: LOADED</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">[✓] Slime Engine: RUNNING</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">[✓] CRT Renderer: ONLINE</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">[✓] Grid System: SYNCED</span>
-                    </div>
-                </div>
-            </div>
+      <div class="small muted-2" style="margin-top:12px">Version: <strong>v3.1</strong></div>
+    </aside>
 
-            <!-- Quick Links -->
-            <div class="bento-item fade-in">
-                <div class="bento-title"><span class="symbol">[→]</span>NAVIGATE</div>
-                <div class="bento-text">
-                    <div style="margin-bottom: 8px;">
-                        <a href="https://github.com/slyme-os" class="link" target="_blank">> GitHub Repository</a>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <a href="https://twitter.com/slyme_os" class="link" target="_blank">> Social Network</a>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <a href="mailto:contact@slyme-os.dev" class="link">> Send Transmission</a>
-                    </div>
-                    <div>
-                        <a href="#" class="link">> System Documentation</a>
-                    </div>
-                </div>
-            </div>
+    <!-- RIGHT: main content -->
+    <main class="main" id="home">
+      <section class="hero" aria-label="Hero">
+        <div class="headline">
+          <span class="kicker">Arch · Ollama · Local</span>
+          <h2>Freedom to run AI locally — privacy, power, and control.</h2>
+          <p class="lead">SLYME‑OS is an Arch Linux based distribution that bundles local AI tooling (Ollama-friendly) so you can run models on your machine without cloud telemetry. Minimalist, open source, and made for builders.</p>
 
-            <!-- Large Terminal: System Manifest -->
-            <div class="bento-item large terminal-window fade-in">
-                <div class="terminal-header">
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    MANIFEST.yml
-                </div>
-                <div class="terminal-content">
-                    <div class="terminal-line">
-                        <span class="output">name: SLYME-OS Mainframe</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">version: 2025.12.11</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">architecture: Neuro-Linear</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">aesthetics: [Neon, CRT, Mainframe, Slime]</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">features:</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">  - Boot Sequence Animation</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">  - Typewriter Effect</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">  - CRT Scanlines & Vignette</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">  - Bento Grid Layout</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">  - Terminal Windows</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">  - Neon Glow Effects</span>
-                    </div>
-                </div>
-            </div>
+          <div class="hero-actions">
+            <button id="openStudio" class="btn primary">Open Studio</button>
+            <a href="#features" class="btn ghost">See features</a>
+            <a class="btn ghost" href="https://slyme-os.github.io/docs/" target="_blank">Get docs</a>
+          </div>
 
-            <!-- Features Grid -->
-            <div class="bento-item fade-in">
-                <div class="bento-title"><span class="symbol">[◆]</span>FEATURES</div>
-                <div class="bento-text">
-                    <div style="margin-bottom: 10px;">⚡ Neon aesthetic design</div>
-                    <div style="margin-bottom: 10px;">◊ Mainframe interface</div>
-                    <div style="margin-bottom: 10px;">█ CRT scanline effects</div>
-                    <div style="margin-bottom: 10px;">◈ Terminal windows</div>
-                    <div style="margin-bottom: 10px;">≈ Slime-infused UI</div>
-                    <div>∞ Responsive grid layout</div>
-                </div>
-            </div>
-
-            <!-- Terminal 3: Network Status -->
-            <div class="bento-item terminal-window fade-in">
-                <div class="terminal-header">
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    NETWORK_STATUS.sh
-                </div>
-                <div class="terminal-content">
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">ifconfig</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">eth0: UP | 192.168.∞.∞</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Packets: 999,999↑ 999,999↓</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Latency: 0ms (Quantum)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Call to Action -->
-            <div class="bento-item fade-in">
-                <div class="bento-title"><span class="symbol">[>>]</span>GET STARTED</div>
-                <div class="bento-text">
-                    Explore the SLYME-OS ecosystem and join the neon-infused neural revolution. Dive into code, create with style, and transform data into art.
-                </div>
-                <div style="margin-top: 15px; padding: 10px; border: 1px solid var(--neon-pink); background: rgba(255, 0, 255, 0.1); border-radius: 3px;">
-                    <span style="color: var(--neon-pink); font-weight: bold;">> SYSTEM READY FOR DEPLOYMENT</span>
-                </div>
-            </div>
+          <div style="margin-top:12px;color:var(--muted);font-size:13px">Tip: replace the ISO link with your release URL in the download button.</div>
         </div>
 
-        <!-- Status Bar -->
-        <div class="status-bar fade-in">
-            <div class="status-item">
-                <span class="status-dot"></span>
-                <span>SYS_ACTIVE</span>
+        <aside class="preview" aria-label="Local AI preview">
+          <div class="term-header">
+            <div class="dots" aria-hidden="true">
+              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
             </div>
-            <div class="status-item">
-                <span>LOAD: 42.0%</span>
-            </div>
-            <div class="status-item">
-                <span>MEM: 16GB/32GB</span>
-            </div>
-            <div class="status-item">
-                <span>TEMP: 37°C</span>
-            </div>
-            <div class="status-item">
-                <span>FPS: 60</span>
-            </div>
-        </div>
-    </div>
+            <div style="margin-left:auto" class="muted">slyme@local:~</div>
+          </div>
+          <div class="term-body" id="terminal">
+            <div class="term-line muted">Welcome to SLYME‑OS Studio — local AI preview</div>
+            <div class="term-line muted">Booting Ollama engine...</div>
+            <div class="term-line" id="type-target"></div>
+          </div>
 
-    <script>
-        // Boot Sequence Animation
-        function typeWriter(element, text, speed = 50) {
-            return new Promise(resolve => {
-                let i = 0;
-                element.innerHTML = '';
-                function type() {
-                    if (i < text.length) {
-                        element.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(type, speed);
-                    } else {
-                        resolve();
-                    }
-                }
-                type();
-            });
+          <div style="display:flex; gap:8px; padding:12px; border-top:1px solid rgba(255,255,255,0.02);">
+            <a id="openLocal" class="btn ghost" href="#" target="_blank">Open Local</a>
+            <a id="copyCmd" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.04)">Copy CMD</a>
+          </div>
+        </aside>
+      </section>
+
+      <section id="features" style="margin-top:18px">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
+          <h3 style="margin:0; font-family:var(--mono)">Core features</h3>
+          <div class="muted-2">DIR: /slyme-os</div>
+        </div>
+
+        <div class="features" role="list">
+          <div class="card" role="listitem">
+            <h4>Local AI · Ollama</h4>
+            <p>Run models locally, offline. Full control over prompts, weights, and runtime — no external telemetry.</p>
+          </div>
+          <div class="card" role="listitem">
+            <h4>Privacy-first</h4>
+            <p>Default settings minimize data collection and keep everything on device. Open source by design.</p>
+          </div>
+          <div class="card" role="listitem">
+            <h4>Minimal & Fast</h4>
+            <p>Lightweight installer, tuned defaults, and a hacker-friendly experience for builders and researchers.</p>
+          </div>
+          <div class="card" role="listitem">
+            <h4>Installer ISO</h4>
+            <p>Bootable live image with a guided installer. Replace the placeholder download with your release URL.</p>
+          </div>
+          <div class="card" role="listitem">
+            <h4>Open Source</h4>
+            <p>Everything public — fork, modify, and run. No vendor lock-in.</p>
+          </div>
+          <div class="card" role="listitem">
+            <h4>Hacker Aesthetic</h4>
+            <p>Terminal-first UI, neon-slime accents, and accessibility-first design for power users.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-footer" role="contentinfo">
+        <div>© <strong>SLYME‑OS</strong> — Privacy, Freedom, Local AI</div>
+        <div style="display:flex; gap:12px; align-items:center">
+          <a class="link" href="https://github.com/slyme-os/slyme-os" target="_blank">Repo</a>
+          <a class="link" href="https://slyme-os.github.io/docs/" target="_blank">Docs</a>
+          <span class="muted-2">built with ♥</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // MATRIX background (canvas)
+    ;(function initMatrix(){
+      const canvas = document.getElementById('matrix');
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w,h;
+      function resize(){ w = canvas.width = innerWidth; h = canvas.height = innerHeight; cols = Math.floor(w/14)+1; ypos = new Array(cols).fill(0).map(()=>Math.random()*h); }
+      let cols, ypos;
+      window.addEventListener('resize', resize);
+      resize();
+      function frame(){
+        ctx.fillStyle = "rgba(0,0,0,0.08)";
+        ctx.fillRect(0,0,w,h);
+        ctx.fillStyle = "rgba(0,240,122,0.06)";
+        ctx.font = "12px 'Space Mono', monospace";
+        for(let i=0;i<cols;i++){
+          const text = String.fromCharCode(0x30A0 + Math.random()*96);
+          const x = i*14;
+          ctx.fillText(text, x, ypos[i]);
+          ypos[i] += 14 * (0.4 + Math.random()*0.9);
+          if(ypos[i] > h) ypos[i] = -20;
         }
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
 
-        async function runBootSequence() {
-            const bootSequence = document.getElementById('bootSequence');
-            const lines = [
-                '▓▒░ SLYME-OS MAINFRAME BOOT SEQUENCE v.2025 ░▒▓',
-                'Initializing Neural Synthesis Engine...',
-                'Loading Neon Driver... [████████████████████] 100%',
-                'Synchronizing CRT Grid... [████████████████████] 100%',
-                'Welcome to the Slime. System Ready.'
-            ];
-
-            const lineElements = [
-                document.getElementById('bootLine1'),
-                document.getElementById('bootLine2'),
-                document.getElementById('bootLine3'),
-                document.getElementById('bootLine4'),
-                document.getElementById('bootLine5')
-            ];
-
-            for (let i = 0; i < lines.length; i++) {
-                await typeWriter(lineElements[i], lines[i], 40);
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            bootSequence.classList.add('hidden');
+    // Terminal typing + type-target loop
+    (function terminalDemo(){
+      const lines = [
+        "ollama run slyme-gpt-local --port 11434",
+        "model loaded: slyme-gpt-local",
+        "listening at http://localhost:11434",
+        "your prompts remain local — no cloud telemetry"
+      ];
+      const target = document.getElementById('type-target');
+      const terminal = document.getElementById('terminal');
+      let li=0, ci=0;
+      function loop(){
+        if(!target) return;
+        if(li >= lines.length){
+          setTimeout(()=>{ li=0; ci=0; target.textContent=''; loop(); }, 2600);
+          return;
         }
+        const cur = lines[li];
+        if(ci <= cur.length){
+          target.textContent = cur.slice(0,ci);
+          ci++;
+          setTimeout(loop, 36 + Math.random()*30);
+        } else {
+          // append finished line
+          const el = document.createElement('div');
+          el.className = 'term-line muted';
+          el.textContent = '$ ' + cur;
+          terminal.insertBefore(el, target);
+          li++; ci=0;
+          setTimeout(loop, 900);
+        }
+      }
+      loop();
+    })();
 
-        // Start boot sequence on page load
-        window.addEventListener('load', runBootSequence);
+    // Boot sequence (short and skippable)
+    (function bootSequence(){
+      const boot = document.getElementById('bootSequence');
+      const bLines = [
+        'BIOS 01/01/25 SLYME-OS v3.1',
+        'Detecting devices... [ok]',
+        'Initializing Ollama engine... [ok]',
+        'Privacy modules loaded. Telemetry: disabled',
+        'Boot complete — welcome'
+      ];
+      const els = [ 'bootLine1','bootLine2','bootLine3','bootLine4','bootLine5' ].map(id=>document.getElementById(id));
+      let idx=0;
+      function type(el, text, speed=30){ return new Promise(r=>{ let i=0; el.textContent=''; (function t(){ if(i<text.length){ el.textContent += text[i++]; setTimeout(t, speed); } else r(); })(); }); }
+      async function run(){
+        for(const [i,line] of bLines.entries()){
+          await type(els[i], line, 28 + Math.random()*20);
+          await new Promise(res=>setTimeout(res, 180 + Math.random()*180));
+        }
+        await new Promise(res=>setTimeout(res, 800));
+        boot.classList.add('hidden');
+      }
+      // allow skip on click/press
+      boot.addEventListener('click', ()=> boot.classList.add('hidden'));
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') boot.classList.add('hidden'); });
+      window.addEventListener('load', run);
+    })();
 
-        // Add random glitch effects to headers
-        setInterval(() => {
-            const headers = document.querySelectorAll('.header');
-            headers.forEach(header => {
-                if (Math.random() > 0.95) {
-                    header.style.animation = 'none';
-                    setTimeout(() => {
-                        header.style.animation = 'glitch 3s infinite';
-                    }, 50);
-                }
-            });
-        }, 2000);
+    // UI interactions
+    document.querySelectorAll('[data-scroll]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const sel = btn.getAttribute('data-scroll');
+        const target = document.querySelector(sel);
+        if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
 
-        // Animate grid items on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    // buttons
+    document.getElementById('downloadBtn').addEventListener('click', e=>{
+      e.preventDefault();
+      alert('Placeholder: replace this with your ISO download URL in index.html');
+    });
+    document.getElementById('openStudio').addEventListener('click', ()=> alert('Studio placeholder — add your local web UI link or instructions.'));
+    document.getElementById('openLocal').addEventListener('click', e=>{ e.preventDefault(); window.open('http://localhost:11434','_blank'); });
+    document.getElementById('copyCmd').addEventListener('click', async ()=>{
+      const cmd = 'ollama run slyme-gpt-local --port 11434';
+      try{ await navigator.clipboard.writeText(cmd); alert('Copied: ' + cmd); }catch{ prompt('Copy this command:', cmd); }
+    });
 
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeIn 0.5s ease-in forwards';
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.bento-item').forEach(item => {
-            observer.observe(item);
-        });
-
-        // Update system clock
-        setInterval(() => {
-            const now = new Date();
-            const hours = String(now.getUTCHours()).padStart(2, '0');
-            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
-            const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-            // Clock update can be added to status bar if desired
-        }, 1000);
-    </script>
+    // small accessibility: focus outlines for keyboard users
+    document.addEventListener('keydown', e=>{
+      if(e.key==='Tab'){ document.body.classList.add('show-focus'); }
+    });
+  </script>
 </body>
 </html>
