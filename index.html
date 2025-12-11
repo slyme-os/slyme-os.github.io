@@ -3,77 +3,158 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SLYME-OS — Minimalist, privacy-first AI OS</title>
+  <title>SLYME-OS Studio — Local AI · Privacy-first · Minimalist OS</title>
   <meta name="description" content="SLYME-OS — Arch-based OS with local AI via Ollama. Privacy-first, open-source, hacker aesthetic." />
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="matrix"></div>
+  <div id="matrix" aria-hidden="true"></div>
 
-  <main class="container">
-    <header class="hero">
-      <div class="badge">SLYME-OS</div>
-      <h1 id="main-headline" class="headline">Minimalist OS • Local AI • Total Privacy</h1>
-      <p class="sub">Arch Linux base • Ollama-powered local models • Unfiltered, offline AI access — open source, bleeding edge.</p>
-
-      <div class="ctas">
-        <a class="btn btn-primary" href="#" id="downloadBtn">Download (ISO)</a>
-        <a class="btn" href="https://github.com/slyme-os/slyme-os" target="_blank" rel="noopener">GitHub Repo</a>
-        <a class="btn" href="https://slyme-os.github.io/docs/" target="_blank" rel="noopener">Docs</a>
-      </div>
-    </header>
-
-    <section class="features">
-      <div class="card">
-        <h3>Local AI — Ollama</h3>
-        <p>Run language models locally with Ollama. No telemetry, no cloud leaks — your prompts stay with you.</p>
-      </div>
-      <div class="card">
-        <h3>Privacy & Control</h3>
-        <p>Everything is open-source. You own your data and model access is local-first. Minimal defaults, maximum freedom.</p>
-      </div>
-      <div class="card">
-        <h3>Hacker Aesthetic</h3>
-        <p>Terminal-first UI, fast tooling, and a lightweight user experience for makers and power users.</p>
-      </div>
-    </section>
-
-    <section class="terminal-demo">
-      <div class="terminal-window">
-        <div class="term-header">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
-          <div class="term-title">slyme@local:~</div>
-        </div>
-        <div class="term-body" id="terminal">
-          <div class="line">Welcome to SLYME-OS — privacy-first AI on your machine.</div>
-          <div class="line muted">Booting local model...</div>
-          <div class="line cursor" id="type-target"></div>
+  <div class="app-shell">
+    <aside class="sidebar" role="navigation" aria-label="Main">
+      <div class="brand">
+        <div class="logo">S</div>
+        <div class="brand-text">
+          <div class="title">SLYME</div>
+          <div class="subtitle">OS Studio</div>
         </div>
       </div>
-      <aside class="meta">
-        <h4>Why SLYME?</h4>
-        <p>Freedom to run unfiltered models, keep your prompts private, and experiment without vendor lock-in.</p>
-        <ul>
-          <li>Local AI via Ollama</li>
-          <li>Arch-based, customizable</li>
-          <li>Open source & free</li>
-        </ul>
-      </aside>
-    </section>
 
-    <footer class="site-footer">
-      <div>© <strong>SLYME-OS</strong> — Built for privacy and freedom</div>
-      <div class="footer-links">
-        <a href="https://slyme-os.github.io/">Site</a>
-        <a href="https://github.com/slyme-os/slyme-os">Repo</a>
-        <a href="mailto:contact@slyme.local">Contact</a>
+      <nav class="nav">
+        <button class="nav-item active" data-view="apps">Apps</button>
+        <button class="nav-item" data-view="drive">Drive</button>
+        <a class="nav-item" href="https://github.com/slyme-os/slyme-os" target="_blank" rel="noopener">Repo</a>
+        <a class="nav-item" href="https://slyme-os.github.io/docs/" target="_blank" rel="noopener">Docs</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="downloadIso" class="btn-ghost">Download ISO</button>
+        <div class="small muted">Privacy-first • Local AI • Open source</div>
       </div>
-    </footer>
-  </main>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <input id="search" placeholder="Search apps, models, files..." aria-label="Search" />
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"></path></svg>
+        </div>
+
+        <div class="top-actions">
+          <button class="icon-btn" title="Open terminal" id="openTerminal">TERMINAL</button>
+          <a class="ghost-link" href="mailto:contact@slyme.local">Contact</a>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="panel panel-left">
+          <div class="panel-header">
+            <h2>Apps & Models</h2>
+            <div class="panel-actions">
+              <button id="newApp" class="small-btn">+ New</button>
+              <select id="filter" class="small-select" aria-label="Filter">
+                <option value="all">All</option>
+                <option value="local">Local</option>
+                <option value="recommended">Recommended</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="cards" class="cards" role="list">
+            <!-- Card examples -->
+            <article class="card" data-id="ollama" role="listitem" tabindex="0">
+              <div class="card-top">
+                <div class="card-badge">local</div>
+                <div class="card-title">Ollama · Local Models</div>
+              </div>
+              <div class="card-body">Run and manage local language models. No cloud telemetry — fully local API.</div>
+              <div class="card-meta">
+                <span>port 11434</span>
+                <button class="card-btn" data-action="open">Open</button>
+              </div>
+            </article>
+
+            <article class="card" data-id="slyme-gpt" role="listitem" tabindex="0">
+              <div class="card-top">
+                <div class="card-badge neon">model</div>
+                <div class="card-title">slyme-gpt-local</div>
+              </div>
+              <div class="card-body">Unfiltered, research model packaged for offline inference via Ollama.</div>
+              <div class="card-meta">
+                <span>quantized</span>
+                <button class="card-btn" data-action="open">Launch</button>
+              </div>
+            </article>
+
+            <article class="card" data-id="launcher" role="listitem" tabindex="0">
+              <div class="card-top">
+                <div class="card-badge">tool</div>
+                <div class="card-title">Installer · Live ISO</div>
+              </div>
+              <div class="card-body">Bootable ISO and installer for SLYME-OS — minimalist, Arch-based.</div>
+              <div class="card-meta">
+                <span>1.2 GB</span>
+                <button class="card-btn" data-action="download">Download</button>
+              </div>
+            </article>
+
+            <!-- Additional placeholders -->
+            <article class="card empty" aria-hidden="true">
+              <div class="card-top"><div class="card-title muted">More apps coming</div></div>
+              <div class="card-body muted">Customize, add your own models and tools.</div>
+            </article>
+          </div>
+        </div>
+
+        <aside class="panel panel-right" aria-live="polite">
+          <div class="panel-header">
+            <h3 id="previewTitle">Preview</h3>
+            <div class="panel-actions">
+              <button id="copyCmd" class="small-btn">Copy CMD</button>
+            </div>
+          </div>
+
+          <div class="preview">
+            <div class="preview-meta">
+              <div class="p-line"><strong>Status:</strong> <span id="status">Idle</span></div>
+              <div class="p-line"><strong>Model:</strong> <span id="modelName">—</span></div>
+            </div>
+
+            <div class="terminal-window">
+              <div class="term-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <div class="term-title">slyme@local:~</div>
+              </div>
+              <div class="term-body" id="terminal">
+                <div class="line muted">Welcome to SLYME-OS Studio — preview & local AI console</div>
+                <div class="line muted">Booting local model preview...</div>
+                <div class="line cursor" id="type-target"></div>
+              </div>
+            </div>
+
+            <div class="preview-actions">
+              <a id="openLocal" class="btn" href="#" target="_blank" rel="noopener">Open Local</a>
+              <a id="openDocs" class="btn ghost" href="https://slyme-os.github.io/docs/" target="_blank" rel="noopener">Docs</a>
+            </div>
+          </div>
+
+          <div class="small muted footer-note">Your data stays local. SLYME-OS fosters experimentation without cloud lock-in.</div>
+        </aside>
+      </section>
+
+      <footer class="site-footer">
+        <div>© <strong>SLYME-OS</strong> — Built for privacy and freedom</div>
+        <div class="footer-links">
+          <a href="https://slyme-os.github.io/">Site</a>
+          <a href="https://github.com/slyme-os/slyme-os">Repo</a>
+        </div>
+      </footer>
+    </main>
+  </div>
 
   <script src="assets/js/main.js"></script>
 </body>

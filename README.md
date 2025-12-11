@@ -1,11 +1,12 @@
-# SLYME-OS Website (GitHub Pages)
+# SLYME-OS Studio (GitHub Pages)
 
-This is a static GitHub Pages site for SLYME-OS with a hacker/terminal aesthetic.
-Files included:
-- index.html
-- assets/css/style.css
-- assets/js/main.js
-- 404.html
+This is a GitHub Pages-ready static site for SLYME-OS with an "AI Studio / Drive" inspired layout and a hacker/terminal aesthetic.
+
+What it contains:
+- index.html — main dashboard (sidebar, cards, preview + terminal)
+- assets/css/style.css — styles with neon-slime theme
+- assets/js/main.js — client-side interactions (typing terminal, card preview, matrix background)
+- 404.html — simple 404 page
 
 Preview locally:
 - Using Python 3:
@@ -14,16 +15,17 @@ Preview locally:
 - Or with npm:
   - npx http-server -p 8000
 
-Push to your GitHub Pages repository (replace branch if needed):
-1. Copy files into your repository root (index.html) and assets/ folder.
-2. Commit and push:
+Install to your repo:
+1. Copy the files into the repository root and the `assets/` folder.
+2. Commit and push to your pages branch (often `main` or `gh-pages`):
    git add .
-   git commit -m "Add GitHub Pages site: hacker terminal theme"
+   git commit -m "Add SLYME-OS Studio site (AI Studio / Drive inspired)"
    git push origin main
 
-Notes:
-- Replace the Download (ISO) button href in index.html with the real URL to your ISO or installer.
-- Update copy, links, screenshots, and documentation links to match your project.
-- If you use a custom domain, add a CNAME file with the domain in the repo root.
+Notes & next steps:
+- Replace the Download ISO placeholders (buttons and alert messages) with your actual ISO or installer URL in index.html and/or assets/js/main.js.
+- Update model/application URLs (e.g. http://localhost:11434) to match your actual runtime or local endpoints.
+- Swap copy, logos, screenshots, and add docs pages under /docs if you want a full documentation site.
+- If you want, I can prepare a branch and open a pull request into slyme-os/slyme-os.github.io with these files; tell me which branch name to use and whether you'd like me to commit directly to main or create a PR.
 
-Want me to open a branch/PR with these files added to slyme-os/slyme-os.github.io? I can prepare the commit and push it for you if you'd like.
+Enjoy — the site is designed to be pushed straight to GitHub Pages and to give a studio-like experience for local AI and privacy-first messaging.
