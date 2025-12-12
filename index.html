@@ -3,43 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYME OS | Unfiltered. Private. Free.</title>
-  <meta name="description" content="Arch-based OS with local Ollama AI. No telemetry. No censorship. Pure freedom." />
+  <title>SLYME OS // UNGOVERNABLE</title>
+  <meta name="description" content="Arch Linux + Local Ollama. No filters. No telemetry. No masters."/>
 
-  <!-- Tailwind + Lucide -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Mono:wght@300;500&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            slime: {
-              50: '#f0fdf4',
-              400: '#4ade80',
-              500: '#39ff14',
-              600: '#16a34a',
-              900: '#0c1a10',
-              950: '#050a05',
-            }
-          },
-          fontFamily: { mono: ['"IBM Plex Mono"', '"Space Mono"', 'monospace'] },
+          fontFamily: { orbitron: ['Orbitron', 'sans-serif'], mono: ['"IBM Plex Mono"', 'monospace'] },
+          colors: { slime: {500: '#39ff14', 600: '#00ff00, 700: '#00ff41'} },
           animation: {
-            'glitch-1': 'glitch1 2.5s infinite',
-            'glitch-2': 'glitch2 2.5s infinite',
-            'scan': 'scan 8s linear infinite',
-            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'float': 'float 6s ease-in-out infinite',
+            'matrix': 'matrix 16s linear infinite',
+            'drip': 'drip 4s ease-in-out infinite',
+            'glitch': 'glitch 3s infinite',
+            'pulse-fast': 'pulse 1.5s infinite',
+            'float': 'float 8s ease-in-out infinite',
           },
           keyframes: {
-            glitch1: { '0%,100%': { clip: 'rect(0,9999px,0,0)' }, '20%': { clip: 'rect(32px,9999px,77px,0)' }, '40%': { clip: 'rect(87px,9999px,12px,0)' }, '60%': { clip: 'rect(23px,9999px,99px,0)' }, '80%': { clip: 'rect(55px,9999px,43px,0)' } },
-            glitch2: { '0%,100%': { clip: 'rect(0,9999px,0,0)' }, '20%': { clip: 'rect(12px,9999px,88px,0)' }, '40%': { clip: 'rect(66px,9999px,33px,0)' }, '60%': { clip: 'rect(98px,9999px,21px,0)' }, '80%': { clip: 'rect(44px,9999px,77px,0)' } },
-            scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100%)' } },
-            float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
+            matrix: { '0%': { backgroundPosition: '0% 0%' }, '100%': { backgroundPosition: '0% 100%' }},
+            drip: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(20px)' }},
+            glitch: { '0%,100%': { transform: 'translate(0)' }, '20%': { transform: 'translate(-5px,5px)' }, '40%': { transform: 'translate(5px,-5px)' }, '60%': { transform: 'translate(-5px,0)' }},
+            float: { '0%,100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-30px) rotate(5deg)' }}
           }
         }
       }
@@ -47,204 +37,152 @@
   </script>
 
   <style>
-    body { cursor: crosshair; }
-    .scanline {
-      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 50%);
-      background-size: 100% 4px;
-      pointer-events: none;
-      position: fixed;
-      inset: 0;
-      z-index: 40;
-      animation: scan 8s linear infinite;
+    body, html { margin:0; padding:0; overflow-x:hidden; background:#000; color:#39ff14; height:100vh; }
+    .matrix-rain {
+      position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;
+      background: linear-gradient(0deg, transparent, #000 90%), repeating-linear-gradient(90deg, #39ff1408 0px, transparent 1px, transparent 50px, #39ff1408 51px);
+      opacity: 0.4;
+      animation: matrix 20s linear infinite;
     }
-    .glow { text-shadow: 0 0 20px #39ff14; }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #050a05; }
-    ::-webkit-scrollbar-thumb { background: #15803d; }
-    ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
-
-    /* Logo glow + float */
-    #slyme-logo {
-      filter: drop-shadow(0 0 30px #39ff14) brightness(1.15);
-      animation: float 6s ease-in-out infinite;
-      transition: transform 0.3s ease;
+    .crt::before {
+      content:""; position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+      z-index: 30;
     }
-    #slyme-logo:hover {
-      transform: scale(1.1) rotate(3deg);
+    .vhs::after {
+      content:""; position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none;
+      background: linear-gradient(90deg, transparent 98%, #39ff14 98%, #39ff14 100%);
+      animation: vhs 6s steps(20) infinite;
+      z-index: 31;
+      opacity: 0.08;
     }
+    @keyframes vhs { from { transform: translateX(-100%); } to { transform: translateX(0); }}
+    .glow-text { text-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14; }
+    .slime-drip { position:absolute; width:8px; height:60px; background:#39ff14; border-radius:100%; filter:blur(4px); animation: drip 4s infinite; }
   </style>
 </head>
-<body class="bg-slime-950 text-gray-300 font-mono min-h-screen overflow-x-hidden bg-[radial-gradient(ellipse_at_center,_#0c1a10_0%,_#050a05_100%)]">
+<body class="crt vhs">
 
-  <!-- CRT Scanlines -->
-  <div class="scanline"></div>
+  <!-- Matrix Rain + Slime Drips -->
+  <div class="matrix-rain"></div>
+  <div class="fixed top-20 left-1/3 slime-drip opacity-60" style="animation-delay:0s"></div>
+  <div class="fixed top-32 right-1/4 slime-drip opacity-40" style="animation-delay:1.5s"></div>
+  <div class="fixed top-44 left-1/2 slime-drip opacity-50" style="animation-delay:2.8s"></div>
 
-  <!-- Boot Screen -->
-  <div id="boot" class="fixed inset-0 bg-black z-50 flex items-center justify-center flex-col text-slime-500 font-mono text-sm leading-tight">
-    <pre id="bootlog" class="opacity-90"></pre>
+  <!-- 3D Holographic Logo -->
+  <div id="holo" class="fixed inset-0 flex items-center justify-center pointer-events-none z-10">
+    <img src="logo.png" id="holo-logo" class="w-96 opacity-80 animate-float" style="filter: drop-shadow(0 0 80px #39ff14);"/>
   </div>
 
-  <!-- Main Content -->
-  <div class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+  <!-- Boot Overlay -->
+  <div id="boot" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center text-slime-500 font-mono text-lg">
+    <pre id="bootlog" class="text-center leading-snug"></pre>
+  </div>
 
-    <!-- Header with Official Logo -->
-    <nav class="flex justify-between items-center py-8 border-b border-slime-900/60">
-      <a href="/" class="flex items-center gap-6 group">
-        <img src="logo.png" id="slyme-logo" alt="Slyme OS Logo" class="h-16 md:h-24" />
+  <!-- Main UI -->
+  <div class="relative z-20 min-h-screen flex flex-col">
+
+    <nav class="border-b border-slime-500/30 backdrop-blur-xl bg-black/60 px-8 py-6 flex justify-between items-center">
+      <div class="flex items-center gap-6">
+        <img src="logo.png" class="h-12 glow-text animate-pulse"/>
         <div>
-          <h1 class="text-4xl md:text-5xl font-bold tracking-widest leading-none">
-            SLYME<span class="text-slime-500 animate-pulse">_</span>OS
-          </h1>
-          <p class="text-sm text-gray-500 tracking-widest uppercase">Unfiltered • Local • Free</p>
+          <h1 class="text-4xl font-orbitron glow-text tracking-widest">SLYME<span class="animate-pulse">_</span>OS</h1>
+          <p class="text-xs opacity-70 -mt-1">UNGOVERNABLE LOCAL AI</p>
         </div>
-      </a>
-
-      <div class="flex items-center gap-6 text-xs uppercase">
-        <span class="w-2 h-2 bg-slime-500 rounded-full animate-pulse"></span> ONLINE
-        <span id="clock" class="ml-4 text-gray-500"></span>
+      </div>
+      <div class="flex items-center gap-8 text-xs uppercase">
+        <span class="flex items-center gap-2"><span class="w-3 h-3 bg-slime-500 rounded-full animate-pulse"></span> ONLINE</span>
+        <span id="clock" class="font-mono></span>
       </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="mt-20 md:mt-32 grid lg:grid-cols-2 gap-16 items-center">
-      <div class="space-y-8">
-        <div class="inline-block px-4 py-1 bg-slime-500 text-black text-xs font-bold uppercase animate-pulse">
-          ► SYSTEM ONLINE - OLLAMA ACTIVE
+    <main class="flex-1 flex items-center justify-center px-8 py-20 relative">
+      <div class="max-w-5xl w-full grid lg:grid-cols-2 gap-20 items-center">
+
+        <!-- Left — Text -->
+        <div class="space-y-12">
+          <div class="text-7xl md:text-8xl font-orbitron font-black leading-none">
+            <div class="glow-text glitch" data-text="UNFILTERED">UNFILTERED</div>
+            <div class="text-8xl md:text-9xl text-slime-500 glitch" data-text="AI">AI</div>
+            <div class="glow-text glitch" data-text="LOCAL">LOCAL</div>
+          </div>
+
+          <p class="text-2xl opacity-90 max-w-lg leading-relaxed">
+            Arch Linux stripped to the bone.<br>
+            Ollama pre-loaded. Zero telemetry.<br>
+            <span class="text-slime-500 font-bold">You own the model. You own the data. You own the future.</span>
+          </p>
+
+          <div class="flex flex-wrap gap-6 mt-12">
+            <a href="https://github.com/slyme-os/slyme-os/releases" class="px-12 py-5 bg-slime-500 hover:bg-white text-black font-bold text-xl uppercase tracking-widest shadow-2xl shadow-slime-500/50 hover:scale-105 transition-all">
+              DOWNLOAD ISO
+            </a>
+            <a href="https://github.com/slyme-os" class="px-12 py-5 border-2 border-slime-500 text-slime-500 hover:bg-slime-500 hover:text-black font-bold text-xl uppercase tracking-widest transition-all">
+              GITHUB
+            </a>
+          </div>
+
+          <div class="mt-20 flex gap-12 text-sm opacity-70">
+            <div><span class="text-slime-500">BASE</span><br>Arch Linux</div>
+            <div><span class="text-slime-500">AI</span><br>Ollama + Open WebUI</div>
+            <div><span class="text-slime-500">PRIVACY</span><br>100% Local</div>
+          </div>
         </div>
 
-        <h1 class="text-5xl md:text-7xl font-bold leading-tight">
-          <span class="text-white">UNFILTERED</span><br>
-          <span class="text-slime-500 glitch" data-text="LOCAL AI">LOCAL AI</span><br>
-          <span class="text-white">NO BIG TECH</span>
-        </h1>
-
-        <p class="text-xl text-gray-400 max-w-xl border-l-4 border-slime-500 pl-6 leading-relaxed">
-          Arch Linux–based minimalist OS with <span class="text-slime-500 font-bold">built-in Ollama</span>. 
-          Run uncensored models locally. Zero telemetry. Full privacy. Total freedom.
-        </p>
-
-        <div class="flex flex-wrap gap-6 pt-6">
-          <a href="https://github.com/slyme-os" target="_blank" class="px-8 py-4 bg-slime-500 hover:bg-white text-black font-bold uppercase tracking-wider transition-all flex items-center gap-3 group">
-            <i data-lucide="github" class="w-5 h-5"></i>
-            GitHub Org
-            <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
-          </a>
-          <a href="#download" class="px-8 py-4 border border-slime-500 text-slime-500 hover:bg-slime-500 hover:text-black font-bold uppercase tracking-wider transition-all">
-            ./Download_ISO
-          </a>
-        </div>
-      </div>
-
-      <!-- Live Terminal -->
-      <div class="relative">
-        <div class="absolute -inset-4 bg-slime-500/20 rounded-2xl blur-3xl animate-pulse-slow"></div>
-        <div class="relative bg-black/90 border border-slime-500/50 rounded-xl overflow-hidden shadow-2xl">
-          <div class="bg-slime-950/80 px-4 py-3 flex items-center gap-3 border-b border-slime-800">
-            <div class="flex gap-2">
-              <div class="w-3 h-3 rounded-full bg-red-500"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div class="w-3 h-3 rounded-full bg-slime-500 animate-pulse"></div>
+        <!-- Right — Live Terminal -->
+        <div class="relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-slime-500/20 to-transparent rounded-3xl blur-3xl animate-pulse"></div>
+          <div class="bg-black/90 border-2 border-slime-500/50 rounded-2xl overflow-hidden shadow-2xl backdrop-blur">
+            <div class="bg-gradient-to-r from-black via-slime-900 to-black px-6 py-3 flex items-center gap-3 border-b border-slime-500/30">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-slime-500 animate-pulse"></div>
+              </div>
+              <span class="text-xs opacity-70">root@slyme-os — ~</span>
             </div>
-            <span class="text-xs text-gray-400">root@slyme-os — /home/user</span>
+            <div class="p-8 font-mono text-lg leading-relaxed h-96 overflow-hidden">
+              <p><span class="text-slime-500">$</span> ollama run llama3.2:8b</p>
+              <p class="text-gray-500">>>> Model loaded in 4.2s</p>
+              <p class="text-gray-500">>>> No logs sent. No filters applied.</p>
+              <p class="mt-8 text-slime-400">You are now free to think dangerous thoughts.</p>
+              <p class="mt-12 text-4xl text-slime-500 animate-pulse">█</p>
+            </div>
           </div>
-          <div class="p-6 text-sm leading-relaxed font-mono h-96 overflow-hidden">
-            <p><span class="text-slime-500">$</span> ollama run deepseek-coder:33b</p>
-            <p class="text-gray-500">>>> Pulling model... done.</p>
-            <p><span class="text-slime-500">>>> </span>You are now free. No filters. No logs. No masters.</p>
-            <p class="mt-8 text-slime-500 animate-pulse">█</p>
-          </div>
         </div>
+
       </div>
+    </main>
 
-    <!-- Rest of the page stays exactly the same — Features, CTA, Footer -->
-    <!-- (I kept them identical to previous version for brevity, but they’re all here) -->
-
-    <section class="mt-32">
-      <h2 class="text-4xl font-bold text-white mb-12 flex items-center gap-4">
-        <i data-lucide="zap" class="text-slime-500"></i> CORE DIRECTIVES
-      </h2>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-black/60 border border-slime-900/60 rounded-xl p-8 hover:border-slime-500 transition-all group">
-          <i data-lucide="shield" class="w-10 h-10 text-slime-500 mb-4"></i>
-          <h3 class="text-2xl font-bold text-white mb-3">Zero Telemetry</h3>
-          <p class="text-gray-400">No phoning home. Your hardware. Your data. Your rules.</p>
-        </div>
-        <div class="bg-black/60 border border-slime-900/60 rounded-xl p-8 hover:border-slime-500 transition-all group">
-          <i data-lucide="lock" class="w-10 h-10 text-slime-500 mb-4"></i>
-          <h3 class="text-2xl font-bold text-white mb-3">Uncensored AI</h3>
-          <p class="text-gray-400">Run any model. Ask anything. No corporate nanny.</p>
-        </div>
-        <div class="bg-black/60 border border-slime-900/60 rounded-xl p-8 hover:border-slime-500 transition-all group">
-          <i data-lucide="terminal" class="w-10 h-10 text-slime-500 mb-4"></i>
-          <h3 class="text-2xl font-bold text-white mb-3">Bleeding Edge</h3>
-          <p class="text-gray-400">Rolling release. Latest kernels. Latest models. Always.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="download" class="mt-32 text-center py-20 bg-slime-950/40 border-y-2 border-slime-500/30">
-      <h2 class="text-6xl font-bold text-white mb-8 glitch" data-text="TAKE CONTROL">TAKE CONTROL</h2>
-      <p class="text-2xl text-gray-300 mb-12 max-w-4xl mx-auto">
-        Stop renting your intelligence from the cloud. Own it locally.
-      </p>
-      <div class="flex justify-center gap-8 flex-wrap">
-        <a href="https://github.com/slyme-os/slyme-os/releases" class="px-12 py-6 bg-slime-500 hover:bg-white text-black font-bold text-xl uppercase tracking-wider transition-all shadow-lg hover:shadow-slime-500/50">
-          Download Slyme OS v1.0
-        </a>
-        <a href="https://github.com/slyme-os/slyme-os" class="px-12 py-6 border-2 border-slime-500 text-slime-500 hover:bg-slime-500 hover:text-black font-bold text-xl uppercase tracking-wider transition-all">
-          Source Code
-        </a>
-      </div>
-    </section>
-
-    <footer class="mt-24 py-12 border-t border-slime-900/50 text-center text-gray-500 text-sm">
-      <p>© 2025 Slyme OS Foundation — <span class="text-slime-500">End of Line.</span></p>
-      <p class="mt-4">Freedom is not given. It is taken.</p>
+    <footer class="border-t border-slime-500/20 py-8 text-center text-sm opacity-60">
+      © 2025 Slyme OS Foundation — <span class="text-slime-500">END OF LINE</span>
     </footer>
   </div>
 
   <script>
     lucide.createIcons();
 
-    // Live Clock
-    setInterval(() => {
-      document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB');
-    }, 1000);
+    // Clock
+    setInterval(() => document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB'), 1000);
 
     // Boot sequence
-    const bootLines = [
-      "SLYME OS BOOT SEQUENCE v1.0",
-      "Initializing kernel.....................[OK]",
-      "Mounting root filesystem................[OK]",
-      "Starting udev...........................[OK]",
-      "Loading local AI stack..................",
-      "Pulling ollama:latest...................[OK]",
-      "Starting Open WebUI @ localhost:8080....[OK]",
-      "Disabling all telemetry hooks...........[OK]",
-      "Applying freedom patches................[OK]",
-      "Welcome to the resistance.",
+    const lines = [
+      "SLYME OS v9.9.9 — UNGOVERNABLE BUILD",
+      "Bypassing corporate rootkits................OK",
+      "Disabling telemetry daemons................OK",
+      "Loading uncensored models..................OK",
+      "Injecting freedom patches...................OK",
       "",
-      "Boot complete. You are now ungovernable."
+      "Welcome back, operator.",
+      "The grid is yours."
     ];
-
-    const bootLog = document.getElementById('bootlog');
     let i = 0;
-    const bootScreen = document.getElementById('boot');
-
-    function typeBoot() {
-      if (i < bootLines.length) {
-        bootLog.textContent += bootLines[i] + '\n';
-        i++;
-        setTimeout(typeBoot, Math.random() * 180 + 80);
-      } else {
-        setTimeout(() => {
-          bootScreen.style.opacity = '0';
-          setTimeout(() => bootScreen.remove(), 1000);
-        }, 1000);
-      }
+    const log = document.getElementById('bootlog');
+    function type() {
+      if (i < lines.length) { log.textContent += lines[i++] + '\n'; setTimeout(type, 120 + Math.random()*150); }
+      else { setTimeout(() => document.getElementById('boot').style.opacity = '0', 800); }
     }
-
-    window.onload = () => setTimeout(typeBoot, 600);
+    setTimeout(type, 800);
   </script>
 </body>
 </html>
