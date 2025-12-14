@@ -8,6 +8,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=IBM+Plex+Mono:wght@300;500&display=swap" rel="stylesheet">
 
@@ -16,7 +17,7 @@
       theme: {
         extend: {
           fontFamily: { orbitron: ['Orbitron', 'sans-serif'], mono: ['"IBM Plex Mono"', 'monospace'] },
-          colors: { slime: {500: '#39ff14', 600: '#00ff00', 700: '#00ff41'} },
+          colors: { slime: {500: '#39ff14', 600: '#00ff00, 700: '#00ff41'} },
           animation: {
             'matrix': 'matrix 16s linear infinite',
             'drip': 'drip 4s ease-in-out infinite',
@@ -57,24 +58,6 @@
     }
     @keyframes vhs { from { transform: translateX(-100%); } to { transform: translateX(0); }}
     .glow-text { text-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14; }
-
-    /* Enhanced Logo Styles */
-    #main-logo {
-      filter: drop-shadow(0 0 40px #39ff14) drop-shadow(0 0 80px #39ff14);
-      animation: float 8s ease-in-out infinite;
-      transition: transform 0.4s ease;
-    }
-    #main-logo:hover {
-      transform: scale(1.1) rotate(8deg);
-    }
-    #nav-logo {
-      filter: drop-shadow(0 0 20px #39ff14);
-      transition: all 0.3s;
-    }
-    #nav-logo:hover {
-      filter: drop-shadow(0 0 40px #39ff14);
-      transform: rotate(5deg);
-    }
     .slime-drip { position:absolute; width:8px; height:60px; background:#39ff14; border-radius:100%; filter:blur(4px); animation: drip 4s infinite; }
   </style>
 </head>
@@ -86,9 +69,9 @@
   <div class="fixed top-32 right-1/4 slime-drip opacity-40" style="animation-delay:1.5s"></div>
   <div class="fixed top-44 left-1/2 slime-drip opacity-50" style="animation-delay:2.8s"></div>
 
-  <!-- Large Holographic Logo (Center Background) -->
-  <div class="fixed inset-0 flex items-center justify-center pointer-events-none z-10 opacity-30">
-    <img src="logo.png" id="main-logo" class="w-96 md:w-[500px] animate-float"/>
+  <!-- 3D Holographic Logo -->
+  <div id="holo" class="fixed inset-0 flex items-center justify-center pointer-events-none z-10">
+    <img src="logo.png" id="holo-logo" class="w-96 opacity-80 animate-float" style="filter: drop-shadow(0 0 80px #39ff14);"/>
   </div>
 
   <!-- Boot Overlay -->
@@ -101,7 +84,7 @@
 
     <nav class="border-b border-slime-500/30 backdrop-blur-xl bg-black/60 px-8 py-6 flex justify-between items-center">
       <div class="flex items-center gap-6">
-        <img src="logo.png" id="nav-logo" class="h-14 md:h-16"/>
+        <img src="logo.png" class="h-12 glow-text animate-pulse"/>
         <div>
           <h1 class="text-4xl font-orbitron glow-text tracking-widest">SLYME<span class="animate-pulse">_</span>OS</h1>
           <p class="text-xs opacity-70 -mt-1">UNGOVERNABLE LOCAL AI</p>
@@ -109,7 +92,7 @@
       </div>
       <div class="flex items-center gap-8 text-xs uppercase">
         <span class="flex items-center gap-2"><span class="w-3 h-3 bg-slime-500 rounded-full animate-pulse"></span> ONLINE</span>
-        <span id="clock" class="font-mono"></span>
+        <span id="clock" class="font-mono></span>
       </div>
     </nav>
 
