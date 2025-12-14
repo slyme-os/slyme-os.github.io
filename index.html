@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slyme-OS</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS via reliable CDN (no Play CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons via stable CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -77,11 +77,11 @@
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #050a05; }
-        ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 0px; }
+        ::-webkit-scrollbar-thumb { background: #15803d; }
         ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
 
         body { cursor: crosshair; }
-        a, button { cursor: crosshair; } /* Changed to crosshair for hacker feel */
+        a, button { cursor: crosshair; }
 
         #boot-screen {
             position: fixed;
@@ -97,7 +97,6 @@
             transition: opacity 0.8s ease-out;
         }
 
-        /* Stronger grid */
         .grid-bg {
             background-image: 
                 linear-gradient(rgba(57,255,20,0.06) 1px, transparent 1px),
@@ -160,7 +159,7 @@
                 </p>
                 
                 <div class="flex flex-wrap gap-5 pt-6">
-                    <!-- MAIN DOWNLOAD BUTTON -->
+                    <!-- DOWNLOAD ISO BUTTON -->
                     <a href="#" id="download-btn" class="relative group px-10 py-5 bg-black border-2 border-slime-500 text-slime-500 font-bold uppercase tracking-widest text-lg overflow-hidden transition-all duration-500 hover:text-black hover:animate-download-pulse">
                         <span class="relative z-10 flex items-center gap-3">
                             <i data-lucide="download-cloud" class="w-6 h-6"></i>
@@ -210,11 +209,8 @@
             </div>
         </section>
 
-        <!-- Rest of your sections (BENTO GRID, FOOTER) remain unchanged -->
-        <!-- ... [keeping the original #projects section and footer] ... -->
-
+        <!-- BENTO GRID -->
         <section id="projects" class="space-y-8">
-            <!-- Your original bento grid content here (unchanged for brevity) -->
             <div class="flex items-end justify-between border-b border-gray-800 pb-4">
                 <div>
                     <h2 class="text-3xl font-bold text-white flex items-center gap-3">
@@ -226,11 +222,79 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
-                <!-- Keep all your original project cards -->
-                <!-- (Same as before - omitted here to keep response shorter) -->
+                
+                <!-- Core OS -->
+                <div class="group md:col-span-2 md:row-span-2 relative overflow-hidden rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 transition-all duration-300">
+                    <div class="absolute inset-0 bg-slime-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="absolute top-4 right-4 text-gray-700">
+                        <i data-lucide="grid-3x3" class="w-24 h-24 opacity-20"></i>
+                    </div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black via-black/90 to-transparent">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-slime-900 text-slime-400 text-[10px] border border-slime-500/30 uppercase">UNDER beta development</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-white mb-2 group-hover:text-slime-400 transition-colors">Slyme OS</h3>
+                        <p class="text-gray-400 text-sm mb-4 max-w-md">
+                            This operating system was created with the sole purpose of maximizing the users output and productivity using AI.
+                        </p>
+                        <a href="#" class="inline-flex items-center gap-2 text-slime-500 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors">
+                            Access Source <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Time/Date Widget -->
+                <div class="relative rounded-xl bg-black border border-gray-800 p-6 flex flex-col justify-center items-center text-center overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/xT9IgusfVcQH5TSMMA/giphy.gif')] bg-cover opacity-5"></div>
+                    <div class="relative z-10">
+                        <i data-lucide="clock" class="w-6 h-6 text-slime-500 mx-auto mb-2"></i>
+                        <h3 class="text-white text-xl font-bold" id="widget-date">...</h3>
+                        <p class="text-gray-500 text-xs mt-1">SYSTEM TIME</p>
+                    </div>
+                </div>
+
+                <!-- DWM -->
+                <div class="md:col-span-1 relative rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 transition-all p-6 flex flex-col justify-between group">
+                    <div class="flex justify-between items-start">
+                        <i data-lucide="hard-drive" class="text-gray-500 group-hover:text-slime-500 transition-colors"></i>
+                        <span class="text-[10px] text-gray-600 border border-gray-800 px-1 rounded">SOFTWARE</span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-slime-400">DWM - suckless</h3>
+                        <p class="text-xs text-gray-500 mt-1">Minimalist and productive window manager.</p>
+                    </div>
+                </div>
+
+                <!-- Documentation -->
+                <a href="#" class="md:col-span-2 relative rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 hover:bg-slime-900/10 transition-all p-6 flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-gray-800 rounded group-hover:bg-slime-500 group-hover:text-black transition-colors">
+                            <i data-lucide="book-open" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Documentation / Wiki</h3>
+                            <p class="text-sm text-gray-400">Installation guides, API references, and schematics.</p>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="text-gray-600 group-hover:text-slime-500 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+
+                <!-- Tech Stack -->
+                <div class="md:col-span-2 relative rounded-xl bg-gray-900/40 border border-gray-800 p-6 flex flex-col justify-center">
+                    <h3 class="text-sm text-gray-400 mb-4 uppercase tracking-widest">Tech Stack</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">OLLAMA</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">DWM - suckless</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">DMENU - suckless</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">OBSIDIAN</span>
+                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">LARGE LANGUAGE MODELS</span>
+                    </div>
+                </div>
+
             </div>
         </section>
 
+        <!-- FOOTER -->
         <footer class="mt-32 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
             <p>&copy; 2025 Slyme-OS DREAM <span class="text-slime-900">End of Line.</span></p>
             <div class="flex gap-4 mt-4 md:mt-0">
@@ -241,6 +305,7 @@
         </footer>
     </main>
 
+    <!-- JAVASCRIPT -->
     <script>
         lucide.createIcons();
 
@@ -302,10 +367,25 @@
 
         window.addEventListener('load', runBootSequence);
 
-        // Optional: Add glitch on download button hover
-        document.getElementById('download-btn')?.addEventListener('mouseenter', function() {
-            this.style.animation = 'glitchHover 0.3s ease-in-out';
-        });
+        // Fallback: Force hide boot screen after 10 seconds if something fails
+        setTimeout(() => {
+            if (bootScreen && bootScreen.style.display !== 'none') {
+                console.warn('Boot sequence timed out – forcing site reveal');
+                bootScreen.style.opacity = '0';
+                setTimeout(() => {
+                    bootScreen.style.display = 'none';
+                    if (typeWriterElement) typeWriter();
+                }, 800);
+            }
+        }, 10000);
+
+        // Glitch effect on download button hover
+        const downloadBtn = document.getElementById('download-btn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('mouseenter', function() {
+                this.style.animation = 'glitchHover 0.3s ease-in-out';
+            });
+        }
     </script>
 </body>
 </html>
