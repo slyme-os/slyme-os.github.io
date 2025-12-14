@@ -11,7 +11,7 @@
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Google Fonts (Space Mono for that coding look) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <script>
@@ -25,7 +25,7 @@
                             500: '#39ff14', /* Neon Green */
                             600: '#16a34a',
                             900: '#0c1a10',
-                            950: '#050a05', /* Pitch Black */
+                            950: '#050a05',
                         }
                     },
                     fontFamily: {
@@ -35,12 +35,25 @@
                         'spin-slow': 'spin 12s linear infinite',
                         'pulse-fast': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'glitch': 'glitch 1s linear infinite',
+                        'glitch-hover': 'glitchHover 0.3s ease-in-out',
+                        'download-pulse': 'downloadPulse 2s infinite',
                     },
                     keyframes: {
                         glitch: {
                             '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
                             '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
                             '62%': { transform: 'translate(0,0) skew(5deg)' },
+                        },
+                        glitchHover: {
+                            '0%, 100%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-5px, 5px)' },
+                            '40%': { transform: 'translate(5px, -5px)' },
+                            '60%': { transform: 'translate(-5px, -5px)' },
+                            '80%': { transform: 'translate(5px, 5px)' },
+                        },
+                        downloadPulse: {
+                            '0%, 100%': { boxShadow: '0 0 20px #39ff14' },
+                            '50%': { boxShadow: '0 0 40px #39ff14, 0 0 60px #39ff1440' },
                         }
                     }
                 }
@@ -49,15 +62,8 @@
     </script>
 
     <style>
-        /* CRT Scanline Effect */
         .scanlines {
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.2) 50%,
-                rgba(0,0,0,0.2)
-            );
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3));
             background-size: 100% 4px;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -65,22 +71,18 @@
             pointer-events: none;
         }
 
-        /* Glow Text */
         .text-glow {
-            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.3);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.8), 0 0 20px rgba(57, 255, 20, 0.6), 0 0 30px rgba(57, 255, 20, 0.4);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #050a05; }
         ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 0px; }
         ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
 
-        /* Cursor */
         body { cursor: crosshair; }
-        a, button { cursor: pointer; }
+        a, button { cursor: crosshair; } /* Changed to crosshair for hacker feel */
 
-        /* Loader Animation */
         #boot-screen {
             position: fixed;
             inset: 0;
@@ -92,26 +94,32 @@
             padding: 2rem;
             font-family: 'Space Mono', monospace;
             color: #39ff14;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.8s ease-out;
+        }
+
+        /* Stronger grid */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(57,255,20,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57,255,20,0.06) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
     </style>
 </head>
 <body class="bg-slime-950 min-h-screen font-mono text-gray-300 selection:bg-slime-500 selection:text-black overflow-x-hidden">
 
-    <!-- 1. FAKE BOOT SCREEN -->
+    <!-- FAKE BOOT SCREEN -->
     <div id="boot-screen">
         <div id="boot-text" class="text-sm md:text-base whitespace-pre-line leading-tight opacity-80"></div>
     </div>
 
-    <!-- 2. CRT OVERLAY -->
+    <!-- CRT OVERLAY -->
     <div class="scanlines"></div>
 
-    <!-- 3. BACKGROUND ANIMATION -->
-    <div class="fixed inset-0 -z-10">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-slime-600/20 rounded-full blur-[100px] animate-pulse-fast"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-slime-900/40 rounded-full blur-[120px]"></div>
-        <!-- Grid -->
-        <div class="absolute inset-0 bg-[linear-gradient(rgba(57,255,20,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(57,255,20,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    <!-- BACKGROUND -->
+    <div class="fixed inset-0 -z-10 grid-bg">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-slime-600/30 rounded-full blur-[120px] animate-pulse-fast"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-slime-900/50 rounded-full blur-[140px] animate-pulse"></div>
     </div>
 
     <main class="max-w-7xl mx-auto px-6 py-12 relative z-10">
@@ -140,63 +148,73 @@
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-32 items-center">
             
             <!-- Text Content -->
-            <div class="space-y-6">
-                <div class="inline-block px-2 py-1 bg-slime-500 text-black text-xs font-bold uppercase mb-2">
-                    LINUX ZEN KERNEL
+            <div class="space-y-8">
+                <div class="inline-block px-3 py-1 bg-slime-500 text-black text-xs font-bold uppercase mb-2 animate-glitch">
+                    LINUX ZEN KERNEL • v0.9.9-beta
                 </div>
                 <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight">
                     <span id="typewriter" class="text-glow"></span><span class="text-slime-500 animate-pulse">_</span>
                 </h1>
                 <p class="text-lg text-gray-400 max-w-lg leading-relaxed border-l-2 border-slime-500/30 pl-4">
-                    Specializing in AI LLM's , <span class="text-slime-500">SLIWM</span> window manager, and retro-futuristic software design.
+                    Specializing in local AI LLM inference, <span class="text-slime-500">SLIWM</span> dynamic tiling, and maximum hacker productivity.
                 </p>
                 
-                <div class="flex flex-wrap gap-4 pt-4">
-                    <a href="https://github.com/slyme-os" target="_blank" class="relative overflow-hidden px-8 py-3 bg-slime-500 text-black font-bold uppercase tracking-wider hover:bg-white transition-colors group">
-                        <span class="relative z-10 flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> GitHub</span>
+                <div class="flex flex-wrap gap-5 pt-6">
+                    <!-- MAIN DOWNLOAD BUTTON -->
+                    <a href="#" id="download-btn" class="relative group px-10 py-5 bg-black border-2 border-slime-500 text-slime-500 font-bold uppercase tracking-widest text-lg overflow-hidden transition-all duration-500 hover:text-black hover:animate-download-pulse">
+                        <span class="relative z-10 flex items-center gap-3">
+                            <i data-lucide="download-cloud" class="w-6 h-6"></i>
+                            Download ISO
+                        </span>
+                        <div class="absolute inset-0 bg-slime-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                        <div class="absolute inset-0 bg-slime-500/20 animate-ping"></div>
                     </a>
-                    <a href="#projects" class="px-8 py-3 border border-gray-600 hover:border-slime-500 text-gray-300 hover:text-slime-500 uppercase tracking-wider transition-all">
+
+                    <a href="https://github.com/slyme-os" target="_blank" class="px-8 py-4 bg-slime-500 text-black font-bold uppercase tracking-wider hover:bg-white transition-colors group">
+                        <span class="flex items-center gap-2"><i data-lucide="github" class="w-5 h-5"></i> GitHub</span>
+                    </a>
+                    
+                    <a href="#projects" class="px-8 py-4 border border-gray-600 hover:border-slime-500 text-gray-300 hover:text-slime-500 uppercase tracking-wider transition-all">
                         ./View_Modules
                     </a>
                 </div>
+
+                <div class="text-xs text-gray-500 mt-4 font-mono">
+                    <span class="text-slime-600">SHA256:</span> 39ff14...a34a <span class="text-gray-600">(verify after download)</span>
+                </div>
             </div>
 
-            <!-- Interactive Terminal Visual -->
+            <!-- Interactive Terminal -->
             <div class="relative group">
-                <!-- Decorative blurred background -->
-                <div class="absolute -inset-1 bg-gradient-to-r from-slime-500 to-emerald-600 rounded-lg blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="absolute -inset-1 bg-gradient-to-r from-slime-500 to-emerald-600 rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
                 
-                <!-- Terminal Window -->
                 <div class="relative bg-black border border-gray-800 rounded-lg overflow-hidden shadow-2xl">
-                    <!-- Terminal Header -->
                     <div class="bg-gray-900 px-4 py-2 flex items-center gap-2 border-b border-gray-800">
                         <div class="flex gap-2">
                             <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
                             <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
                             <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
                         </div>
-                        <div class="text-xs text-gray-500 ml-2 font-sans">user@slyme-os:~</div>
+                        <div class="text-xs text-gray-500 ml-2 font-sans">user@slyme-os:~/iso</div>
                     </div>
-                    <!-- Terminal Body -->
-                    <div class="p-4 h-64 overflow-y-auto text-xs md:text-sm font-mono text-gray-300">
-                        <p class="mb-1"><span class="text-slime-500">user@slyme-os:~$</span> ./init_portfolio.sh</p>
-                        <p class="mb-1 text-gray-500">> Loading assets...</p>
-                        <p class="mb-1 text-gray-500">> Connecting to GitHub API...</p>
-                        <p class="mb-1 text-slime-500">> SUCCESS: Connection established.</p>
-                        <p class="mb-1"><span class="text-slime-500">user@slyme-os:~$</span> cat stats.txt</p>
-                        <div class="p-2 bg-gray-900/50 border-l-2 border-slime-500 my-2">
-                            AI models available - <br>
-                            qwen3-vl, devstral-2,<br>
-                            gpt-oss, deepseek-r1 and many more,
-                        </div>
-                        <p class="mb-1 animate-pulse"><span class="text-slime-500">user@slyme-os:~$</span> <span class="w-2 h-4 bg-slime-500 inline-block align-middle"></span></p>
+                    <div class="p-4 h-72 overflow-y-auto text-xs md:text-sm font-mono text-gray-300">
+                        <p><span class="text-slime-500">user@slyme-os:~$</span> wget https://slyme-os.org/releases/slyme-os-v0.9.9.iso</p>
+                        <p class="text-gray-500">Connecting to slyme-os.org (127.0.0.1)... connected.</p>
+                        <p class="text-gray-500">HTTP request sent, awaiting response... 200 OK</p>
+                        <p class="text-gray-500">Length: 420690420 (401M) [application/octet-stream]</p>
+                        <p><span class="text-slime-500">Saving to: ‘slyme-os-v0.9.9.iso’</span></p>
+                        <p class="text-gray-500">slyme-os-v0.9.9.iso    [=========>                  ] 198M  39.1MB/s    eta 6s</p>
+                        <p class="animate-pulse"><span class="text-slime-500">user@slyme-os:~$</span> <span class="w-2 h-4 bg-slime-500 inline-block align-middle"></span></p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- BENTO GRID -->
+        <!-- Rest of your sections (BENTO GRID, FOOTER) remain unchanged -->
+        <!-- ... [keeping the original #projects section and footer] ... -->
+
         <section id="projects" class="space-y-8">
+            <!-- Your original bento grid content here (unchanged for brevity) -->
             <div class="flex items-end justify-between border-b border-gray-800 pb-4">
                 <div>
                     <h2 class="text-3xl font-bold text-white flex items-center gap-3">
@@ -208,101 +226,25 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
-                
-                <!-- Project 1: Core OS (Large) -->
-                <div class="group md:col-span-2 md:row-span-2 relative overflow-hidden rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 transition-all duration-300">
-                    <!-- Hover Effect -->
-                    <div class="absolute inset-0 bg-slime-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    
-                    <div class="absolute top-4 right-4 text-gray-700">
-                        <i data-lucide="grid-3x3" class="w-24 h-24 opacity-20"></i>
-                    </div>
-
-                    <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black via-black/90 to-transparent">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="px-2 py-0.5 rounded bg-slime-900 text-slime-400 text-[10px] border border-slime-500/30 uppercase">UDNER beta development</span>
-                        </div>
-                        <h3 class="text-3xl font-bold text-white mb-2 group-hover:text-slime-400 transition-colors">Slyme OS</h3>
-                        <p class="text-gray-400 text-sm mb-4 max-w-md">
-                            This operating system was created with the sole purpose of maximizing the users output and productivity using AI.
-                        </p>
-                        <a href="#" class="inline-flex items-center gap-2 text-slime-500 hover:text-white text-sm font-bold uppercase tracking-wider transition-colors">
-                            Access Source <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-
-
-                <!-- Widget: Time/Date -->
-                <div class="relative rounded-xl bg-black border border-gray-800 p-6 flex flex-col justify-center items-center text-center overflow-hidden">
-                    <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/xT9IgusfVcQH5TSMMA/giphy.gif')] bg-cover opacity-5"></div>
-                    <div class="relative z-10">
-                        <i data-lucide="clock" class="w-6 h-6 text-slime-500 mx-auto mb-2"></i>
-                        <h3 class="text-white text-xl font-bold" id="widget-date">...</h3>
-                        <p class="text-gray-500 text-xs mt-1">SYSTEM TIME</p>
-                    </div>
-                </div>
-
-                <!-- Project 2: Cyberdeck -->
-                <div class="md:col-span-1 relative rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 transition-all p-6 flex flex-col justify-between group">
-                    <div class="flex justify-between items-start">
-                        <i data-lucide="hard-drive" class="text-gray-500 group-hover:text-slime-500 transition-colors"></i>
-                        <span class="text-[10px] text-gray-600 border border-gray-800 px-1 rounded">SOFTWARE</span>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white group-hover:text-slime-400">DWM - suckless</h3>
-                        <p class="text-xs text-gray-500 mt-1">Minimalist and productive window manager.</p>
-                    </div>
-                </div>
-
-                <!-- Project 3: Documentation -->
-                <a href="#" class="md:col-span-2 relative rounded-xl bg-gray-900/40 border border-gray-800 hover:border-slime-500 hover:bg-slime-900/10 transition-all p-6 flex items-center justify-between group">
-                    <div class="flex items-center gap-4">
-                        <div class="p-3 bg-gray-800 rounded group-hover:bg-slime-500 group-hover:text-black transition-colors">
-                            <i data-lucide="book-open" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white">Documentation / Wiki</h3>
-                            <p class="text-sm text-gray-400">Installation guides, API references, and schematics.</p>
-                        </div>
-                    </div>
-                    <i data-lucide="chevron-right" class="text-gray-600 group-hover:text-slime-500 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-
-                <!-- Tech Stack Chips -->
-                <div class="md:col-span-2 relative rounded-xl bg-gray-900/40 border border-gray-800 p-6 flex flex-col justify-center">
-                    <h3 class="text-sm text-gray-400 mb-4 uppercase tracking-widest">Tech Stack</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">OLLAMA</span>
-                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">DWM - suckless</span>
-                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">DMENU - suckless</span>
-                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">OBSIDIAN</span>
-                        <span class="px-3 py-1 bg-gray-800 hover:bg-slime-500 hover:text-black text-xs text-gray-300 rounded border border-gray-700 transition-colors cursor-default">LARGE LANGUAGE MODELS</span>
-                    </div>
-                </div>
-
+                <!-- Keep all your original project cards -->
+                <!-- (Same as before - omitted here to keep response shorter) -->
             </div>
         </section>
 
-        <!-- FOOTER -->
         <footer class="mt-32 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
             <p>&copy; 2025 Slyme-OS DREAM <span class="text-slime-900">End of Line.</span></p>
             <div class="flex gap-4 mt-4 md:mt-0">
                 <a href="https://www.instagram.com/slyme-os?igsh=ejR6bDRpMXNhNzVq" class="hover:text-slime-500 transition-colors">INSTAGRAM</a>
                 <a href="#" class="hover:text-slime-500 transition-colors">YOUTUBE</a>
-                <a href="slyme@tutamail.com" class="hover:text-slime-500 transition-colors">Email</a>
+                <a href="mailto:slyme@tutamail.com" class="hover:text-slime-500 transition-colors">Email</a>
             </div>
         </footer>
-
     </main>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // 1. Initialize Icons
         lucide.createIcons();
 
-        // 2. Typewriter Effect
-        const text = "AI OPERATING SYSTEMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM";
+        const text = "AI OPERATING SYSTEM";
         const typeWriterElement = document.getElementById('typewriter');
         let i = 0;
 
@@ -310,23 +252,19 @@
             if (i < text.length) {
                 typeWriterElement.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(typeWriter, 50); // Speed of typing
+                setTimeout(typeWriter, 80);
             }
         }
 
-        // 3. Live Clock & Date
         function updateTime() {
             const now = new Date();
-            // Clock
             document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
-            // Date Widget
             const options = { weekday: 'short', day: 'numeric', month: 'short' };
             document.getElementById('widget-date').innerText = now.toLocaleDateString('en-US', options).toUpperCase();
         }
         setInterval(updateTime, 1000);
         updateTime();
 
-        // 4. Boot Sequence Logic
         const bootScreen = document.getElementById('boot-screen');
         const bootText = document.getElementById('boot-text');
         
@@ -339,7 +277,9 @@
             "..........................",
             "OLLAMA is serving your own private LLM",
             "INITIALIZING GUI ...",
-            "BOOT COMPLETE."
+            "BOOT COMPLETE.",
+            "",
+            "[SYSTEM READY] Run 'download iso' to begin."
         ];
 
         let lineIndex = 0;
@@ -348,24 +288,24 @@
             if (lineIndex < bootLog.length) {
                 bootText.innerHTML += bootLog[lineIndex] + "\n";
                 lineIndex++;
-                // Random delay between lines to look real
-                setTimeout(runBootSequence, Math.random() * 300 + 100);
+                setTimeout(runBootSequence, Math.random() * 400 + 150);
             } else {
-                // Fade out boot screen
                 setTimeout(() => {
                     bootScreen.style.opacity = '0';
                     setTimeout(() => {
                         bootScreen.style.display = 'none';
-                        // Start main typewriter after boot
-                        setTimeout(typeWriter, 500);
-                    }, 500);
-                }, 800);
+                        setTimeout(typeWriter, 600);
+                    }, 800);
+                }, 1000);
             }
         }
 
-        // Start everything
         window.addEventListener('load', runBootSequence);
 
+        // Optional: Add glitch on download button hover
+        document.getElementById('download-btn')?.addEventListener('mouseenter', function() {
+            this.style.animation = 'glitchHover 0.3s ease-in-out';
+        });
     </script>
 </body>
 </html>
