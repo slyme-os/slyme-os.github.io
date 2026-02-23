@@ -1,751 +1,1378 @@
+
 <!DOCTYPE html>
-<html lang="en" class="cursor-crosshair">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Slyme-OS: AI-powered Linux distribution with local LLM integration, built on suckless principles">
-    <meta name="keywords" content="Linux, AI, LLM, Operating System, Terminal, DWM, Ollama">
-    <title>Slyme-OS | AI-Powered Linux Distribution</title>
-    
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Slyme OS — The world's most AI-native Linux distribution. Local LLM integration, zero telemetry, built on suckless principles.">
+<meta name="keywords" content="Linux, AI, LLM, Operating System, Terminal, DWM, Ollama, Local AI, Privacy, Arch Linux">
+<meta property="og:title" content="Slyme OS | AI-Native Linux">
+<meta property="og:description" content="Private LLM-powered Linux. AI woven into every layer — shell, WM, files, editor. Yours, forever.">
+<title>Slyme OS | AI-Native Linux</title>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        slime: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#39ff14',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#0c1a10',
-                            950: '#050a05',
-                        }
-                    },
-                    fontFamily: {
-                        mono: ['"JetBrains Mono"', '"Space Mono"', 'monospace'],
-                    },
-                    animation: {
-                        'glitch': 'glitch 3s linear infinite',
-                        'glitch-fast': 'glitchFast 0.5s linear infinite',
-                        'float': 'float 8s ease-in-out infinite',
-                        'download-glow': 'downloadGlow 2s ease-in-out infinite alternate',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'shimmer': 'shimmer 3s linear infinite',
-                        'gradient': 'gradient 15s ease infinite',
-                        'typing': 'typing 0.5s step-end infinite',
-                        'fade-in': 'fadeIn 0.6s ease-out',
-                        'slide-up': 'slideUp 0.8s ease-out',
-                    },
-                    keyframes: {
-                        glitch: {
-                            '0%,100%': { transform: 'translate(0)' },
-                            '20%': { transform: 'translate(-2px, 2px)' },
-                            '40%': { transform: 'translate(2px, -2px)' },
-                            '60%': { transform: 'translate(-2px, -2px)' },
-                            '80%': { transform: 'translate(2px, 2px)' },
-                        },
-                        glitchFast: {
-                            '0%,100%': { transform: 'translate(0)' },
-                            '10%': { transform: 'translate(-4px, 4px)' },
-                            '20%': { transform: 'translate(4px, -4px)' },
-                            '30%': { transform: 'translate(-4px, -4px)' },
-                        },
-                        float: {
-                            '0%,100%': { transform: 'translateY(0) translateX(0)' },
-                            '33%': { transform: 'translateY(-30px) translateX(10px)' },
-                            '66%': { transform: 'translateY(10px) translateX(-10px)' },
-                        },
-                        downloadGlow: {
-                            'from': { boxShadow: '0 0 20px #39ff1440, 0 0 40px #39ff1420' },
-                            'to': { boxShadow: '0 0 50px #39ff1480, 0 0 80px #39ff1440, 0 0 120px #39ff1420' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-200% 0' },
-                            '100%': { backgroundPosition: '200% 0' },
-                        },
-                        gradient: {
-                            '0%, 100%': { backgroundPosition: '0% 50%' },
-                            '50%': { backgroundPosition: '100% 50%' },
-                        },
-                        typing: {
-                            '0%, 50%': { opacity: '1' },
-                            '51%, 100%': { opacity: '0' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<style>
+:root {
+  --g: #39ff14;
+  --g2: #00ff88;
+  --g3: #7fff00;
+  --gd: #0d1f0d;
+  --gdk: #060e06;
+  --bg: #030703;
+  --bg2: #070f07;
+  --text: #b0c8b0;
+  --text2: #6a8f6a;
+  --border: rgba(57,255,20,0.15);
+  --border2: rgba(57,255,20,0.35);
+  --glow-sm: 0 0 10px rgba(57,255,20,0.4);
+  --glow-md: 0 0 20px rgba(57,255,20,0.5), 0 0 40px rgba(57,255,20,0.2);
+  --glow-lg: 0 0 40px rgba(57,255,20,0.6), 0 0 80px rgba(57,255,20,0.3), 0 0 120px rgba(57,255,20,0.1);
+}
 
-    <style>
-        * {
-            scroll-behavior: smooth;
-        }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        :root {
-            --slime-glow: #39ff14;
-        }
+html { scroll-behavior: smooth; }
 
-        .scanlines {
-            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.25) 50%);
-            background-size: 100% 3px;
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            pointer-events: none;
-            opacity: 0.3;
-            animation: float 20s linear infinite;
-        }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
 
-        .text-glow-strong {
-            text-shadow: 0 0 20px var(--slime-glow), 0 0 40px rgba(57,255,20,0.5), 0 0 60px rgba(57,255,20,0.3), 0 0 80px rgba(57,255,20,0.2);
-        }
+::selection { background: var(--g); color: #000; }
 
-        .text-glow-soft {
-            text-shadow: 0 0 10px rgba(57,255,20,0.4), 0 0 20px rgba(57,255,20,0.2);
-        }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(57,255,20,0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--g); }
 
-        .text-glow-medium {
-            text-shadow: 0 0 15px rgba(57,255,20,0.5), 0 0 30px rgba(57,255,20,0.3);
-        }
+/* ── CANVAS BG ── */
+#matrix-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  opacity: 0.35;
+  pointer-events: none;
+}
 
-        .grid-bg {
-            background-image: 
-                linear-gradient(rgba(57,255,20,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(57,255,20,0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: float 25s linear infinite;
-        }
+/* ── SCANLINES ── */
+.scanlines {
+  position: fixed; inset: 0; z-index: 1;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.15) 2px,
+    rgba(0,0,0,0.15) 4px
+  );
+  pointer-events: none;
+  animation: scanMove 8s linear infinite;
+}
+@keyframes scanMove { from { background-position: 0 0; } to { background-position: 0 40px; } }
 
-        #boot-screen {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #000 0%, #050a05 50%, #000 100%);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 3rem;
-            font-family: 'JetBrains Mono', 'Space Mono', monospace;
-            color: #39ff14;
-            transition: opacity 1.5s ease-out, visibility 0s 1.5s;
-        }
+/* ── BOOT SCREEN ── */
+#boot {
+  position: fixed; inset: 0; z-index: 999;
+  background: #000;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 3rem;
+  font-family: 'JetBrains Mono', monospace;
+  transition: opacity 1s ease, visibility 0s 1s;
+}
+#boot.hidden { opacity: 0; visibility: hidden; }
+#boot-text { font-size: clamp(10px, 1.2vw, 14px); line-height: 1.8; }
+.boot-line { color: var(--g); opacity: 0; transform: translateX(-10px); transition: opacity 0.1s, transform 0.1s; }
+.boot-line.show { opacity: 1; transform: translateX(0); }
+.boot-line.dim { color: var(--text2); }
+.boot-line.warn { color: #ffdd57; }
+.boot-line.err { color: #ff4444; }
+.boot-bar { margin-top: 1rem; height: 2px; background: var(--gdk); width: 300px; }
+.boot-bar-fill { height: 100%; background: var(--g); width: 0; transition: width 3s linear; box-shadow: var(--glow-sm); }
 
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+/* ── MAIN WRAPPER ── */
+.site { position: relative; z-index: 2; }
 
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 64px;
+  background: rgba(3,7,3,0.85);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  transition: background 0.3s, border-color 0.3s;
+}
+nav.scrolled { background: rgba(3,7,3,0.97); border-bottom-color: var(--border2); }
+.nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.nav-logo-icon {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(57,255,20,0.5);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--g); font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.nav-logo:hover .nav-logo-icon { border-color: var(--g); box-shadow: var(--glow-sm); }
+.nav-logo-text {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900; font-size: 1.1rem;
+  color: #fff; letter-spacing: 0.1em;
+}
+.nav-logo-text span { color: var(--g); }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a {
+  color: var(--text2); text-decoration: none;
+  font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--g); }
+.nav-status { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; color: var(--text2); }
+.status-dot { width: 7px; height: 7px; background: var(--g); border-radius: 50%; box-shadow: var(--glow-sm); animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.nav-dl {
+  padding: 7px 18px;
+  background: var(--g);
+  color: #000; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em;
+  text-decoration: none; text-transform: uppercase;
+  border-radius: 4px;
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+.nav-dl:hover { box-shadow: var(--glow-md); transform: translateY(-1px); }
 
-        .feature-card {
-            position: relative;
-            overflow: hidden;
-        }
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 2.5rem 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 40%;
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(57,255,20,0.06) 0%, transparent 65%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid rgba(57,255,20,0.4);
+  border-radius: 3px;
+  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--g); background: rgba(57,255,20,0.05);
+  margin-bottom: 2rem;
+}
+.badge-dot { width: 5px; height: 5px; background: var(--g); border-radius: 50%; animation: pulse-dot 1.5s infinite; box-shadow: var(--glow-sm); }
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 900; line-height: 1.05;
+  color: #fff; letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+}
+.hero-title .line-g { color: var(--g); text-shadow: var(--glow-md); display: block; }
+.hero-title .line-w { display: block; }
+.hero-sub {
+  font-size: 0.9rem; line-height: 1.8;
+  color: var(--text2); max-width: 480px;
+  border-left: 2px solid rgba(57,255,20,0.4);
+  padding-left: 1.2rem;
+  margin-bottom: 2.5rem;
+}
+.hero-sub strong { color: var(--g); }
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px;
+  background: var(--g); color: #000;
+  font-weight: 800; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  border: none; border-radius: 4px; text-decoration: none; cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.2s;
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+@keyframes glow-pulse {
+  0%,100% { box-shadow: 0 0 20px rgba(57,255,20,0.4), 0 0 40px rgba(57,255,20,0.2); }
+  50% { box-shadow: 0 0 40px rgba(57,255,20,0.7), 0 0 70px rgba(57,255,20,0.4); }
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--glow-lg); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px;
+  background: transparent; color: var(--g);
+  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1.5px solid rgba(57,255,20,0.5); border-radius: 4px; text-decoration: none;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.btn-secondary:hover { border-color: var(--g); background: rgba(57,255,20,0.07); box-shadow: var(--glow-sm); }
+.hero-meta {
+  font-size: 0.68rem; color: var(--text2);
+  display: flex; flex-wrap: wrap; gap: 1.5rem;
+}
+.meta-item { display: flex; align-items: center; gap: 6px; }
+.meta-item svg { color: var(--g); opacity: 0.7; }
+.meta-ver { color: var(--g); font-weight: 700; }
 
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(57,255,20,0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
+/* ── TERMINAL WINDOW ── */
+.terminal-win {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(57,255,20,0.2);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(57,255,20,0.08);
+  background: rgba(6, 10, 6, 0.95);
+  backdrop-filter: blur(10px);
+}
+.term-titlebar {
+  background: rgba(15,25,15,0.9);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(57,255,20,0.1);
+}
+.term-dots { display: flex; gap: 6px; }
+.term-dot { width: 11px; height: 11px; border-radius: 50%; }
+.td-red { background: #ff5f57; }
+.td-yellow { background: #febc2e; }
+.td-green { background: var(--g); box-shadow: var(--glow-sm); animation: pulse-dot 3s infinite; }
+.term-title { font-size: 0.7rem; color: var(--text2); margin-left: 8px; }
+.term-body { padding: 1.5rem 1.8rem; font-size: 0.8rem; line-height: 2; }
+.term-line { display: flex; align-items: flex-start; gap: 0.6rem; }
+.prompt { color: var(--g); font-weight: 700; flex-shrink: 0; }
+.cmd { color: #e0f0e0; }
+.output { color: var(--text2); padding-left: 1.4rem; font-size: 0.75rem; }
+.output.bright { color: var(--g); }
+.output.warn { color: #ffdd57; }
+.output.success { color: var(--g2); }
+.term-cursor {
+  display: inline-block; width: 8px; height: 14px;
+  background: var(--g); margin-left: 2px;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-        .feature-card:hover::before {
-            opacity: 1;
-        }
+/* ── SECTION COMMON ── */
+section { padding: 100px 2.5rem; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-label {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--g); opacity: 0.8; margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--g); }
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 900; color: #fff;
+  letter-spacing: 0.02em;
+  margin-bottom: 1rem;
+}
+.section-title span { color: var(--g); }
+.section-desc { font-size: 0.88rem; color: var(--text2); max-width: 600px; line-height: 1.8; }
+.sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(57,255,20,0.25), transparent);
+  margin: 0 auto;
+}
 
-        .stat-number {
-            background: linear-gradient(135deg, #39ff14, #4ade80);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+/* ── STATS STRIP ── */
+.stats-strip {
+  background: rgba(10,20,10,0.6);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.stats-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.stat-item:last-child { border-right: none; }
+.stat-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.4rem; font-weight: 900;
+  color: var(--g); text-shadow: var(--glow-md);
+  display: block; margin-bottom: 0.4rem;
+}
+.stat-lbl { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text2); }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #39ff14, #4ade80, #86efac);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% 200%;
-            animation: gradient 3s ease infinite;
-        }
+/* ── AI LAYER SECTION ── */
+.ai-layer {
+  background: linear-gradient(180deg, transparent 0%, rgba(10,20,10,0.4) 50%, transparent 100%);
+}
+.ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.daemon-diagram {
+  position: relative;
+  padding: 2rem;
+}
+.daemon-core {
+  text-align: center;
+  padding: 1.5rem;
+  border: 1.5px solid rgba(57,255,20,0.6);
+  border-radius: 10px;
+  background: rgba(57,255,20,0.05);
+  box-shadow: 0 0 40px rgba(57,255,20,0.1);
+  margin-bottom: 2rem;
+  position: relative;
+}
+.daemon-core::after {
+  content: '';
+  position: absolute; left: 50%; bottom: -2rem;
+  width: 1.5px; height: 2rem; background: rgba(57,255,20,0.4);
+  transform: translateX(-50%);
+}
+.daemon-name {
+  font-family: 'Orbitron', monospace; font-weight: 900;
+  font-size: 1.1rem; color: var(--g); text-shadow: var(--glow-md);
+  letter-spacing: 0.1em; margin-bottom: 0.3rem;
+}
+.daemon-sub { font-size: 0.7rem; color: var(--text2); }
+.daemon-nodes {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
+}
+.daemon-node {
+  padding: 0.8rem 0.6rem;
+  border: 1px solid rgba(57,255,20,0.2);
+  border-radius: 6px;
+  background: rgba(57,255,20,0.03);
+  text-align: center; font-size: 0.65rem;
+  color: var(--text2); letter-spacing: 0.08em; text-transform: uppercase;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+  cursor: default;
+}
+.daemon-node:hover { border-color: rgba(57,255,20,0.5); color: var(--g); background: rgba(57,255,20,0.07); }
+.daemon-node-icon { font-size: 1.2rem; display: block; margin-bottom: 0.3rem; }
+.ai-features-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+.ai-feature {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(10,20,10,0.4);
+  transition: border-color 0.3s, background 0.3s;
+}
+.ai-feature:hover { border-color: rgba(57,255,20,0.35); background: rgba(57,255,20,0.04); }
+.af-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border: 1px solid rgba(57,255,20,0.3); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--g);
+}
+.af-title { font-size: 0.8rem; font-weight: 700; color: #e0f0e0; margin-bottom: 0.3rem; }
+.af-desc { font-size: 0.72rem; color: var(--text2); line-height: 1.6; }
 
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(57,255,20,0.3), transparent);
-            margin: 4rem 0;
-        }
+/* ── FEATURES GRID ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  background: var(--border);
+  margin-top: 3rem;
+}
+.feat-card {
+  background: rgba(6,10,6,0.95);
+  padding: 2rem 1.8rem;
+  position: relative; overflow: hidden;
+  transition: background 0.4s;
+}
+.feat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--g), transparent);
+  opacity: 0; transition: opacity 0.4s;
+}
+.feat-card:hover { background: rgba(10,20,10,0.9); }
+.feat-card:hover::before { opacity: 1; }
+.feat-num {
+  font-family: 'Orbitron', monospace; font-size: 0.6rem;
+  color: rgba(57,255,20,0.3); letter-spacing: 0.2em;
+  margin-bottom: 1rem; display: block;
+}
+.feat-icon {
+  font-size: 1.5rem; margin-bottom: 1rem; display: block;
+}
+.feat-title { font-size: 0.88rem; font-weight: 700; color: #e0f0e0; margin-bottom: 0.6rem; }
+.feat-desc { font-size: 0.73rem; color: var(--text2); line-height: 1.7; }
 
-        .terminal-window {
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(57,255,20,0.1);
-        }
+/* ── INSTALL SECTION ── */
+.install-section { background: rgba(10,20,10,0.3); }
+.install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+.install-steps { display: flex; flex-direction: column; gap: 0; }
+.install-step {
+  display: flex; gap: 1.2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.install-step:last-child { border-bottom: none; }
+.step-num {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border: 1.5px solid rgba(57,255,20,0.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; color: var(--g);
+  font-family: 'Orbitron', monospace;
+}
+.step-title { font-size: 0.82rem; font-weight: 700; color: #e0f0e0; margin-bottom: 0.4rem; }
+.step-desc { font-size: 0.72rem; color: var(--text2); line-height: 1.6; margin-bottom: 0.5rem; }
+.code-block {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(57,255,20,0.15);
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  font-size: 0.72rem; color: var(--g);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+}
+.code-copy {
+  font-size: 0.6rem; color: var(--text2); cursor: pointer;
+  padding: 2px 6px; border: 1px solid var(--border);
+  border-radius: 3px; transition: color 0.2s, border-color 0.2s; white-space: nowrap;
+  background: none;
+}
+.code-copy:hover { color: var(--g); border-color: rgba(57,255,20,0.4); }
+.hw-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+.hw-table th {
+  text-align: left; padding: 0.7rem 1rem;
+  font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--g); border-bottom: 1px solid rgba(57,255,20,0.2);
+  font-weight: 500;
+}
+.hw-table td {
+  padding: 0.7rem 1rem;
+  color: var(--text2);
+  border-bottom: 1px solid rgba(57,255,20,0.07);
+}
+.hw-table tr:last-child td { border-bottom: none; }
+.hw-table td:first-child { color: #e0f0e0; }
+.hw-rec { font-size: 0.6rem; color: var(--g); }
+.hw-badge {
+  display: inline-block; padding: 2px 8px;
+  border: 1px solid rgba(57,255,20,0.3); border-radius: 3px;
+  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--g); background: rgba(57,255,20,0.05);
+}
 
-        .nav-blur {
-            backdrop-filter: blur(10px);
-            background: rgba(5, 10, 5, 0.7);
-        }
+/* ── ROADMAP ── */
+.roadmap-phases { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
+.phase {
+  display: grid; grid-template-columns: 160px 1fr;
+  gap: 0; position: relative;
+}
+.phase::before {
+  content: ''; position: absolute;
+  left: 159px; top: 0; bottom: 0;
+  width: 1px; background: var(--border);
+}
+.phase-meta {
+  padding: 2rem 2rem 2rem 0;
+  text-align: right;
+}
+.phase-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1px solid rgba(57,255,20,0.3); border-radius: 3px;
+  font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--g); font-family: 'Orbitron', monospace;
+  margin-bottom: 0.4rem;
+}
+.phase-time { font-size: 0.65rem; color: var(--text2); }
+.phase-dot {
+  position: absolute; left: 152px; top: 2.2rem;
+  width: 15px; height: 15px; border-radius: 50%;
+  border: 2px solid var(--g); background: var(--bg);
+  box-shadow: var(--glow-sm);
+  z-index: 2;
+}
+.phase-dot.active { background: var(--g); box-shadow: var(--glow-md); }
+.phase-content { padding: 2rem 0 2rem 2.5rem; }
+.phase-title { font-size: 0.9rem; font-weight: 700; color: #e0f0e0; margin-bottom: 0.8rem; }
+.phase-items { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.phase-item {
+  font-size: 0.68rem; padding: 4px 10px;
+  border: 1px solid var(--border); border-radius: 3px;
+  color: var(--text2); background: rgba(57,255,20,0.02);
+  transition: border-color 0.2s, color 0.2s;
+}
+.phase-item:hover { border-color: rgba(57,255,20,0.4); color: var(--g); }
 
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
+/* ── COMMUNITY SECTION ── */
+.community-section { background: rgba(10,20,10,0.3); }
+.community-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.community-card {
+  padding: 1.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px; background: rgba(6,10,6,0.8);
+  text-decoration: none;
+  transition: border-color 0.3s, background 0.3s, transform 0.2s;
+  display: flex; flex-direction: column; gap: 0.8rem;
+}
+.community-card:hover { border-color: rgba(57,255,20,0.5); background: rgba(10,20,10,0.9); transform: translateY(-3px); }
+.cc-icon { font-size: 1.8rem; }
+.cc-name { font-size: 0.85rem; font-weight: 700; color: #e0f0e0; }
+.cc-desc { font-size: 0.72rem; color: var(--text2); line-height: 1.6; }
+.cc-action { font-size: 0.65rem; color: var(--g); display: flex; align-items: center; gap: 6px; margin-top: auto; }
 
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
+/* ── PHILOSOPHY SECTION ── */
+.phil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+.phil-quote {
+  padding: 2.5rem;
+  border: 1px solid rgba(57,255,20,0.2);
+  border-radius: 8px; background: rgba(10,20,10,0.4);
+  position: relative; overflow: hidden;
+}
+.phil-quote::before {
+  content: '"';
+  position: absolute; top: -1rem; left: 1rem;
+  font-size: 8rem; color: rgba(57,255,20,0.05);
+  font-family: 'Orbitron', monospace; line-height: 1;
+}
+.phil-text {
+  font-size: 0.88rem; color: #d0e8d0; line-height: 1.9;
+  font-style: italic; position: relative; z-index: 1;
+}
+.phil-text strong { color: var(--g); font-style: normal; }
+.phil-manifesto { display: flex; flex-direction: column; gap: 1rem; }
+.manifesto-line {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.8rem; color: var(--text2);
+  padding: 0.8rem 0; border-bottom: 1px solid var(--border);
+}
+.manifesto-line:last-child { border-bottom: none; }
+.ml-check { color: var(--g); font-size: 0.8rem; flex-shrink: 0; }
+.ml-no { color: #ff4444; font-size: 0.8rem; flex-shrink: 0; }
 
-        ::-webkit-scrollbar-track {
-            background: #050a05;
-        }
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2.5rem;
+  background: rgba(3,7,3,0.95);
+}
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+}
+.footer-brand-name {
+  font-family: 'Orbitron', monospace; font-weight: 900; font-size: 1.1rem;
+  color: #fff; letter-spacing: 0.1em; margin-bottom: 0.8rem;
+}
+.footer-brand-name span { color: var(--g); }
+.footer-desc { font-size: 0.72rem; color: var(--text2); line-height: 1.8; margin-bottom: 1.2rem; max-width: 300px; }
+.footer-social { display: flex; gap: 0.8rem; }
+.social-link {
+  width: 32px; height: 32px; border-radius: 6px;
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; color: var(--text2); text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.social-link:hover { border-color: rgba(57,255,20,0.5); color: var(--g); background: rgba(57,255,20,0.07); }
+.footer-col-title { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--g); margin-bottom: 1rem; font-weight: 700; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links a { font-size: 0.73rem; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--g); }
+.footer-bottom {
+  max-width: 1200px; margin: 2rem auto 0;
+  padding-top: 1.5rem; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy { font-size: 0.65rem; color: var(--text2); }
+.footer-cmd { font-size: 0.65rem; color: var(--text2); }
+.footer-cmd span { color: var(--g); }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgba(57,255,20,0.3);
-            border-radius: 5px;
-        }
+/* ── SCROLL TOP ── */
+#scrolltop {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 90;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(57,255,20,0.4); border-radius: 6px;
+  background: rgba(3,7,3,0.9); color: var(--g);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s, box-shadow 0.3s;
+}
+#scrolltop.visible { opacity: 1; pointer-events: auto; }
+#scrolltop:hover { box-shadow: var(--glow-sm); }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(57,255,20,0.5);
-        }
-    </style>
+/* ── ANIMATIONS ── */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 0 1.2rem; }
+  .nav-links { display: none; }
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .ai-grid, .install-grid, .phil-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(2) { border-right: none; }
+  .phase { grid-template-columns: 100px 1fr; }
+  .phase::before { left: 99px; }
+  .phase-dot { left: 93px; }
+  .community-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  section { padding: 60px 1.2rem; }
+  .hero { padding: 100px 1.2rem 60px; }
+}
+@media (max-width: 500px) {
+  .hero-title { font-size: 2rem; }
+  .stats-inner { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .hero-btns { flex-direction: column; }
+  .btn-primary, .btn-secondary { justify-content: center; }
+}
+</style>
 </head>
-<body class="bg-slime-950 min-h-screen font-mono text-gray-300 selection:bg-slime-500 selection:text-black overflow-x-hidden antialiased">
+<body>
 
-    <!-- BOOT SCREEN -->
-    <div id="boot-screen">
-        <div id="boot-text" class="text-base sm:text-lg whitespace-pre-line leading-tight opacity-90"></div>
+<!-- MATRIX CANVAS -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- SCANLINES -->
+<div class="scanlines"></div>
+
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <div id="boot-text"></div>
+  <div class="boot-bar"><div class="boot-bar-fill" id="boot-bar-fill"></div></div>
+</div>
+
+<!-- MAIN SITE -->
+<div class="site">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#home" class="nav-logo">
+      <div class="nav-logo-icon">⬡</div>
+      <span class="nav-logo-text">SLYME<span>_</span>OS</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#install">Install</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#community">Community</a>
     </div>
-
-    <!-- CRT SCANLINES -->
-    <div class="scanlines"></div>
-
-    <!-- ANIMATED BACKGROUND -->
-    <div class="fixed inset-0 -z-10 grid-bg">
-        <div class="absolute inset-0 bg-gradient-to-br from-slime-950 via-black to-slime-950 opacity-95"></div>
-        <div class="absolute top-1/4 left-1/4 w-[1000px] h-[1000px] bg-slime-500/10 rounded-full blur-[250px] animate-pulse-slow"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-[800px] h-[800px] bg-slime-600/15 rounded-full blur-[280px] animate-pulse-slow" style="animation-delay: 1s;"></div>
-        <div class="absolute top-1/2 right-1/3 w-[600px] h-[600px] bg-slime-400/8 rounded-full blur-[200px] animate-pulse-slow" style="animation-delay: 2s;"></div>
-        <div class="absolute bottom-1/3 left-1/3 w-[700px] h-[700px] bg-slime-500/6 rounded-full blur-[220px] animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <div class="nav-status">
+        <div class="status-dot"></div>
+        <span>ONLINE · v0.9.9</span>
+      </div>
+      <a href="https://mega.nz/file/cYMBwAhY#wLxmW7zk2oimcmBCymngODZPVtWFtKEUxdAn3tLdjM4" class="nav-dl">↓ Download</a>
     </div>
+  </nav>
 
-    <!-- NAVIGATION -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-40 nav-blur border-b border-slime-900/50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 sm:h-20">
-                <a href="#home" class="flex items-center gap-3 sm:gap-4 group">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-slime-900/70 to-slime-900/40 border-2 border-slime-500/50 rounded-xl flex items-center justify-center group-hover:border-slime-500 group-hover:shadow-[0_0_20px_rgba(57,255,20,0.5)] transition-all duration-300">
-                        <i data-lucide="terminal" class="w-6 h-6 sm:w-7 sm:h-7 text-slime-500 group-hover:scale-110 transition-transform"></i>
-                    </div>
-                    <span class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-wider text-white group-hover:text-glow-strong transition-all duration-300">
-                        SLYME<span class="text-slime-500 animate-pulse">_</span>OS
-                    </span>
-                </a>
-                
-                <div class="flex items-center gap-3 sm:gap-6">
-                    <div class="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-slime-900/40 to-slime-900/20 border border-slime-500/40 rounded-lg backdrop-blur-sm">
-                        <span class="w-2 h-2 bg-slime-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(57,255,20,0.8)]"></span>
-                        <span class="text-slime-500 font-semibold text-xs sm:text-sm">ONLINE</span>
-                    </div>
-                    <span id="clock" class="hidden md:block text-gray-400 font-mono text-xs sm:text-sm px-3 py-2 bg-slime-900/20 rounded-lg border border-slime-900/40"></span>
-                    <button id="menu-toggle" class="md:hidden p-2 text-gray-400 hover:text-slime-500 transition-colors">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
-                    </button>
-                </div>
-            </div>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge"><span class="badge-dot"></span> Beta v0.9.9 · Zen Kernel · Local AI · Zero Telemetry</div>
+        <h1 class="hero-title">
+          <span class="line-g">AI-NATIVE</span>
+          <span class="line-w">LINUX OS.</span>
+        </h1>
+        <p class="hero-sub">
+          AI is not an app you open — it is the <strong>invisible layer underneath everything</strong>. The shell knows what you mean. The file system knows what your files contain. The editor knows what you are building.<br><br>
+          Built on <strong>Arch Linux</strong> · <strong>Zen Kernel</strong> · <strong>Ollama</strong> · <strong>SLIWM</strong>. Yours, forever.
+        </p>
+        <div class="hero-btns">
+          <a href="https://mega.nz/file/cYMBwAhY#wLxmW7zk2oimcmBCymngODZPVtWFtKEUxdAn3tLdjM4" class="btn-primary">↓ Download ISO — 420MB</a>
+          <a href="https://github.com/slyme-os" target="_blank" rel="noopener" class="btn-secondary">⌥ Source on GitHub</a>
         </div>
-    </nav>
-
-    <main class="relative z-10">
-        
-        <!-- HERO SECTION -->
-        <section id="home" class="min-h-screen flex items-center pt-20 sm:pt-24">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 w-full">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-                    
-                    <div class="space-y-8 sm:space-y-10 animate-fade-in">
-                        <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-slime-500 to-slime-400 text-black text-xs sm:text-sm font-bold uppercase tracking-wider rounded-lg shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_30px_rgba(57,255,20,0.6)] transition-all duration-300">
-                            <span class="w-2 h-2 bg-black rounded-full animate-pulse"></span>
-                            ZEN KERNEL • LOCAL AI • BETA v0.9.9
-                        </div>
-                        
-                        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1]">
-                            <span id="typewriter" class="text-white text-glow-strong inline-block"></span>
-                            <span class="text-slime-500 animate-typing ml-1">_</span>
-                        </h1>
-                        
-                        <p class="text-lg sm:text-xl text-gray-300 max-w-xl leading-relaxed border-l-4 border-slime-500/60 pl-6 py-2 bg-gradient-to-r from-slime-900/20 to-transparent rounded-r-lg">
-                            Private LLM-powered Linux for maximum productivity. Built on suckless principles with <span class="text-slime-500 font-semibold text-glow-soft">SLIWM</span> tiling and Ollama integration.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-4 sm:gap-6 pt-6">
-                            <a href="https://mega.nz/file/cYMBwAhY#wLxmW7zk2oimcmBCymngODZPVtWFtKEUxdAn3tLdjM4" id="download-btn" class="relative px-8 sm:px-12 py-5 sm:py-6 bg-black/80 backdrop-blur-sm border-2 border-slime-500 text-slime-500 font-bold uppercase tracking-wider text-base sm:text-lg lg:text-xl overflow-hidden group rounded-lg animate-download-glow hover:scale-105 transition-transform duration-300">
-                                <span class="relative z-10 flex items-center gap-3 sm:gap-4">
-                                    <i data-lucide="download-cloud" class="w-6 h-6 sm:w-8 sm:h-8 group-hover:animate-bounce"></i>
-                                    <span>Download ISO</span>
-                                </span>
-                                <div class="absolute inset-0 bg-gradient-to-r from-slime-500 to-slime-400 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-                                <span class="absolute inset-0 bg-slime-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                            </a>
-                            
-                            <a href="https://github.com/slyme-os" target="_blank" rel="noopener noreferrer" class="px-8 sm:px-10 py-5 sm:py-6 bg-gradient-to-r from-slime-500 to-slime-400 text-black font-bold uppercase tracking-wider hover:from-white hover:to-slime-50 transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-3">
-                                <i data-lucide="github" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                                <span>Source</span>
-                            </a>
-                        </div>
-                        
-                        <div class="text-xs sm:text-sm text-gray-500 font-mono pt-4 px-4 py-3 bg-slime-900/30 rounded-lg border border-slime-900/50 inline-block">
-                            <span class="text-gray-400">SHA256:</span> <span class="text-slime-400">39ff14ab...deadbeef</span> 
-                            <span class="text-gray-600 ml-2">(verify integrity)</span>
-                        </div>
-                    </div>
-
-                    <!-- TERMINAL VISUAL -->
-                    <div class="relative group animate-slide-up">
-                        <div class="absolute -inset-6 bg-gradient-to-br from-slime-500/30 via-slime-500/20 to-transparent rounded-3xl blur-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="relative bg-gradient-to-br from-black/95 to-gray-900/95 border-2 border-gray-800/80 rounded-2xl overflow-hidden terminal-window backdrop-blur-md hover:border-slime-500/50 transition-all duration-300">
-                            <div class="bg-gradient-to-r from-gray-900/90 to-gray-800/90 px-6 py-4 flex items-center gap-4 border-b border-gray-800/80 backdrop-blur-sm">
-                                <div class="flex gap-2.5">
-                                    <div class="w-3.5 h-3.5 rounded-full bg-red-500/80 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div>
-                                    <div class="w-3.5 h-3.5 rounded-full bg-yellow-500/80 shadow-[0_0_8px_rgba(234,179,8,0.6)]"></div>
-                                    <div class="w-3.5 h-3.5 rounded-full bg-slime-500/80 animate-pulse shadow-[0_0_8px_rgba(57,255,20,0.8)]"></div>
-                                </div>
-                                <span class="text-xs sm:text-sm text-gray-300 font-mono flex items-center gap-2">
-                                    <i data-lucide="terminal" class="w-4 h-4 text-slime-500"></i>
-                                    root@slyme-os:~/release
-                                </span>
-                            </div>
-                            <div class="p-6 sm:p-8 text-xs sm:text-sm md:text-base text-gray-300 font-mono leading-relaxed space-y-2 bg-gradient-to-b from-transparent to-black/20">
-                                <p class="flex items-center gap-2">
-                                    <span class="text-slime-500 font-semibold">$</span> 
-                                    <span>ls -la releases/</span>
-                                </p>
-                                <p class="text-gray-500 pl-6 flex items-center gap-2">
-                                    <i data-lucide="file" class="w-4 h-4 text-gray-600"></i>
-                                    -rw-r--r-- 1 root root 420M Dec 15 2025 slyme-os-v0.9.9.iso
-                                </p>
-                                <p class="flex items-center gap-2 pt-2">
-                                    <span class="text-slime-500 font-semibold">$</span> 
-                                    <span>sha256sum slyme-os-v0.9.9.iso</span>
-                                </p>
-                                <p class="text-slime-400 pl-6 font-mono text-xs break-all">39ff14ab39ff14ab39ff14ab39ff14ab39ff14ab39ff14ab39ff14ab39ff14ab</p>
-                                <p class="flex items-center gap-2 pt-2">
-                                    <span class="text-slime-500 font-semibold">$</span> 
-                                    <span>echo "Ready for deployment."</span>
-                                </p>
-                                <p class="text-gray-400 pl-6">Ready for deployment.</p>
-                                <p class="animate-pulse flex items-center gap-2 pt-2">
-                                    <span class="text-slime-500 font-semibold">$</span> 
-                                    <span class="w-2 h-5 bg-slime-500 inline-block"></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="hero-meta">
+          <span class="meta-item">📦 <span>v0.9.9 · Dec 2025</span></span>
+          <span class="meta-item">🔒 <span>100% Local AI</span></span>
+          <span class="meta-item">⚡ <span>Zen Kernel</span></span>
+          <span class="meta-item meta-ver">∞ Freedom</span>
+        </div>
+      </div>
+      <div>
+        <div class="terminal-win">
+          <div class="term-titlebar">
+            <div class="term-dots">
+              <div class="term-dot td-red"></div>
+              <div class="term-dot td-yellow"></div>
+              <div class="term-dot td-green"></div>
             </div>
-        </section>
+            <span class="term-title">slyme@slyme-os:~ — slyme-shell v1.0</span>
+          </div>
+          <div class="term-body">
+            <div class="term-line"><span class="prompt">$</span><span class="cmd">slyme-ai status</span></div>
+            <div class="output success">● slyme-ai daemon active (PID 1337)</div>
+            <div class="output">  Model: mistral:7b-instruct · VRAM: 4.2GB / 8GB</div>
+            <div class="output">  Fast model: phi3:mini · Latency: ~80ms</div>
+            <div class="output">  Socket: /run/slyme-ai.sock · ONLINE</div>
+            <div style="height:0.6rem;"></div>
+            <div class="term-line"><span class="prompt">$</span><span class="cmd">!! find all python files modified today larger than 10kb</span></div>
+            <div class="output warn">→ Translating to command...</div>
+            <div class="output bright">find . -name "*.py" -newer $TODAY -size +10k 2>/dev/null</div>
+            <div class="output">[confirm? y/N] y</div>
+            <div class="output">./src/daemon.py · ./src/shell_hook.py · ./lib/context.py</div>
+            <div style="height:0.6rem;"></div>
+            <div class="term-line"><span class="prompt">$</span><span class="cmd">slyme-find "notes about async rust"</span></div>
+            <div class="output">Searching semantic index (47,291 files)...</div>
+            <div class="output bright">→ 3 matches · 98% / 91% / 84% relevance</div>
+            <div class="output">  ~/notes/rust-async-patterns.md</div>
+            <div class="output">  ~/projects/slyme-ai/NOTES.md</div>
+            <div style="height:0.6rem;"></div>
+            <div class="term-line"><span class="prompt">$</span><span class="term-cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- STATS SECTION -->
-        <section class="py-16 sm:py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-                    <div class="text-center p-6 bg-gray-900/30 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:border-slime-500/50 transition-all duration-300">
-                        <div class="text-3xl sm:text-4xl font-bold stat-number mb-2">420MB</div>
-                        <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">ISO Size</div>
-                    </div>
-                    <div class="text-center p-6 bg-gray-900/30 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:border-slime-500/50 transition-all duration-300">
-                        <div class="text-3xl sm:text-4xl font-bold stat-number mb-2">v0.9.9</div>
-                        <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">Version</div>
-                    </div>
-                    <div class="text-center p-6 bg-gray-900/30 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:border-slime-500/50 transition-all duration-300">
-                        <div class="text-3xl sm:text-4xl font-bold stat-number mb-2">100%</div>
-                        <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">Local AI</div>
-                    </div>
-                    <div class="text-center p-6 bg-gray-900/30 rounded-xl border border-gray-800/50 backdrop-blur-sm hover:border-slime-500/50 transition-all duration-300">
-                        <div class="text-3xl sm:text-4xl font-bold stat-number mb-2">∞</div>
-                        <div class="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">Freedom</div>
-                    </div>
-                </div>
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-item reveal">
+        <span class="stat-val">420MB</span>
+        <span class="stat-lbl">ISO Size</span>
+      </div>
+      <div class="stat-item reveal reveal-delay-1">
+        <span class="stat-val">100%</span>
+        <span class="stat-lbl">Local AI — No Cloud</span>
+      </div>
+      <div class="stat-item reveal reveal-delay-2">
+        <span class="stat-val">0</span>
+        <span class="stat-lbl">Telemetry / Tracking</span>
+      </div>
+      <div class="stat-item reveal reveal-delay-3">
+        <span class="stat-val">∞</span>
+        <span class="stat-lbl">Your Freedom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- AI ARCHITECTURE -->
+  <section class="ai-layer" id="architecture">
+    <div class="section-inner">
+      <div class="ai-grid">
+        <div class="reveal">
+          <div class="section-label">Core Architecture</div>
+          <h2 class="section-title">The <span>slyme-ai</span> Daemon</h2>
+          <p class="section-desc">Every component of Slyme OS talks to a single AI middleware daemon over a Unix socket. Swap models, add routing, scale inference — without touching anything else.</p>
+          <br>
+          <ul class="ai-features-list">
+            <li class="ai-feature">
+              <div class="af-icon">⚡</div>
+              <div>
+                <div class="af-title">Dual Model Routing</div>
+                <div class="af-desc">Fast path (Phi-3 mini, ~80ms) for shell suggestions. Deep path (Mistral 7B) for complex reasoning. Automatically selected per request.</div>
+              </div>
+            </li>
+            <li class="ai-feature">
+              <div class="af-icon">🧠</div>
+              <div>
+                <div class="af-title">System Context Object</div>
+                <div class="af-desc">Every AI call is auto-enriched with current directory, recent commands, active file, clipboard, focused window. You never need to explain what you're doing.</div>
+              </div>
+            </li>
+            <li class="ai-feature">
+              <div class="af-icon">🔌</div>
+              <div>
+                <div class="af-title">Universal Unix Socket API</div>
+                <div class="af-desc">Any script, plugin, or app sends a prompt via /run/slyme-ai.sock and gets a response. AI integration = one line of code for any tool.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="daemon-diagram reveal reveal-delay-2">
+          <div class="daemon-core">
+            <div class="daemon-name">SLYME-AI DAEMON</div>
+            <div class="daemon-sub">systemd service · /run/slyme-ai.sock</div>
+          </div>
+          <div class="daemon-nodes">
+            <div class="daemon-node"><span class="daemon-node-icon">🐚</span>slyme-shell</div>
+            <div class="daemon-node"><span class="daemon-node-icon">🪟</span>SLIWM WM</div>
+            <div class="daemon-node"><span class="daemon-node-icon">📁</span>slyme-find</div>
+            <div class="daemon-node"><span class="daemon-node-icon">📋</span>slyme-clip</div>
+            <div class="daemon-node"><span class="daemon-node-icon">✏️</span>slyme.nvim</div>
+            <div class="daemon-node"><span class="daemon-node-icon">📊</span>slyme-mon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-label">What's Inside</div>
+        <h2 class="section-title">Every Layer, <span>AI-Aware</span></h2>
+        <p class="section-desc">Not a distro with Ollama bolted on. An OS re-architected from the ground up so intelligence runs through every component.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card reveal">
+          <span class="feat-num">01</span>
+          <span class="feat-icon">🐚</span>
+          <div class="feat-title">AI Shell Intelligence</div>
+          <div class="feat-desc">Type <code style="color:var(--g)">!!</code> + plain English to generate commands. Auto-explains errors. Predicts next command from context. Session recap in one command.</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-1">
+          <span class="feat-num">02</span>
+          <span class="feat-icon">🪟</span>
+          <div class="feat-title">Context-Aware WM</div>
+          <div class="feat-desc">SLIWM detects your work mode — Code, Write, Research, Comms — and auto-arranges windows. Global AI scratchpad on any key with full context injected.</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-2">
+          <span class="feat-num">03</span>
+          <span class="feat-icon">🔍</span>
+          <div class="feat-title">Semantic File Search</div>
+          <div class="feat-desc">slyme-find indexes your entire home directory with embeddings. Search 50,000 files with natural language — finds what files <em>mean</em>, not just their names.</div>
+        </div>
+        <div class="feat-card reveal">
+          <span class="feat-num">04</span>
+          <span class="feat-icon">📋</span>
+          <div class="feat-title">AI Clipboard</div>
+          <div class="feat-desc">slyme-clip persists everything you copy, auto-tags by category, and lets you search history semantically. "That Go snippet from last week" — it finds it.</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-1">
+          <span class="feat-num">05</span>
+          <span class="feat-icon">✏️</span>
+          <div class="feat-title">slyme.nvim</div>
+          <div class="feat-desc">Local LLM code completion, inline error explanations, git commit generation, test writer, refactor assistant — all offline, all private, Copilot-class quality.</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-2">
+          <span class="feat-num">06</span>
+          <span class="feat-icon">🛡️</span>
+          <div class="feat-title">Zero Telemetry</div>
+          <div class="feat-desc">Your prompts, your files, your history — none of it leaves your machine. Ever. No cloud dependency, no API keys, no accounts required. Air-gap ready.</div>
+        </div>
+        <div class="feat-card reveal">
+          <span class="feat-num">07</span>
+          <span class="feat-icon">⚡</span>
+          <div class="feat-title">Zen Kernel</div>
+          <div class="feat-desc">Low-latency optimized kernel for real-time AI inference. Reduced jitter, better VRAM scheduling, snappier IPC — built for running LLMs on consumer hardware.</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-1">
+          <span class="feat-num">08</span>
+          <span class="feat-icon">📊</span>
+          <div class="feat-title">Smart System Monitor</div>
+          <div class="feat-desc">slyme-monitor doesn't just show numbers — it interprets them. "Slow because ffmpeg is competing with Ollama for VRAM. Kill it or switch to phi3:mini."</div>
+        </div>
+        <div class="feat-card reveal reveal-delay-2">
+          <span class="feat-num">09</span>
+          <span class="feat-icon">🔧</span>
+          <div class="feat-title">Suckless Core</div>
+          <div class="feat-desc">DWM-based SLIWM, ST terminal, dmenu. Minimal C, simple source, fully hackable. The base stays lean — every AI feature is modular and opt-in.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- INSTALL -->
+  <section class="install-section" id="install">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-label">Get Started</div>
+        <h2 class="section-title">Install <span>Slyme OS</span></h2>
+        <p class="section-desc">Download the ISO, verify integrity, and boot. The installer detects your GPU, recommends models, and downloads them during setup. First boot is AI-ready.</p>
+      </div>
+      <div class="install-grid" style="margin-top:3rem;">
+        <div class="install-steps reveal">
+          <div class="install-step">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-title">Download & Verify</div>
+              <div class="step-desc">Get the ISO from the official release and verify the SHA256 checksum before flashing.</div>
+              <div class="code-block">
+                <span>sha256sum slyme-os-v0.9.9.iso</span>
+                <button class="code-copy" onclick="copyText(this,'sha256sum slyme-os-v0.9.9.iso')">copy</button>
+              </div>
             </div>
-        </section>
-
-        <!-- FEATURES SECTION -->
-        <section id="features" class="py-16 sm:py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12 sm:mb-16">
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 flex items-center justify-center gap-4">
-                        <i data-lucide="zap" class="text-slime-500 w-8 h-8 sm:w-10 sm:h-10"></i>
-                        <span class="gradient-text">KEY FEATURES</span>
-                    </h2>
-                    <p class="text-gray-400 max-w-2xl mx-auto">Everything you need for a productive, AI-powered computing experience</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    <div class="feature-card p-6 sm:p-8 bg-gradient-to-br from-gray-900/50 to-gray-900/30 rounded-2xl border border-gray-800/60 backdrop-blur-sm card-hover relative z-10">
-                        <div class="p-4 bg-slime-500/10 rounded-xl w-fit mb-4">
-                            <i data-lucide="brain" class="w-8 h-8 text-slime-500"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Local LLM Integration</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">Run AI models locally with Ollama. No cloud, no tracking, complete privacy.</p>
-                    </div>
-
-                    <div class="feature-card p-6 sm:p-8 bg-gradient-to-br from-gray-900/50 to-gray-900/30 rounded-2xl border border-gray-800/60 backdrop-blur-sm card-hover relative z-10">
-                        <div class="p-4 bg-slime-500/10 rounded-xl w-fit mb-4">
-                            <i data-lucide="layout-dashboard" class="w-8 h-8 text-slime-500"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">SLIWM Tiling WM</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">Dynamic window management based on DWM. Maximize productivity with keyboard-driven workflow.</p>
-                    </div>
-
-                    <div class="feature-card p-6 sm:p-8 bg-gradient-to-br from-gray-900/50 to-gray-900/30 rounded-2xl border border-gray-800/60 backdrop-blur-sm card-hover relative z-10">
-                        <div class="p-4 bg-slime-500/10 rounded-xl w-fit mb-4">
-                            <i data-lucide="shield" class="w-8 h-8 text-slime-500"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Privacy First</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">No telemetry, no tracking. Your data stays on your machine. Always.</p>
-                    </div>
-
-                    <div class="feature-card p-6 sm:p-8 bg-gradient-to-br from-gray-900/50 to-gray-900/30 rounded-2xl border border-gray-800/60 backdrop-blur-sm card-hover relative z-10">
-                        <div class="p-4 bg-slime-500/10 rounded-xl w-fit mb-4">
-                            <i data-lucide="gauge" class="w-8 h-8 text-slime-500"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Zen Kernel</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">Optimized for performance and low latency. Perfect for real-time AI inference.</p>
-                    </div>
-
-                    <div class="feature-card p-6 sm:p-8 bg-gradient-to-br from-gray-900/50 to-gray-900/30 rounded-2xl border border-gray-800/60 backdrop-blur-sm card-hover relative z-10">
-                        <div class="p-4 bg-slime-500/10 rounded-xl w-fit mb-4">
-                            <i data-lucide="code" class="w-8 h-8 text-slime-500"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Suckless Philosophy</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">Minimal, simple, and hackable. Build your perfect system from the ground up.</p>
-                    </div>
-
-                    <div class="feature-card p-6 sm:p-8 bg-gradient-to-br from-gray-900/50 to-gray-900/30 rounded-2xl border border-gray-800/60 backdrop-blur-sm card-hover relative z-10">
-                        <div class="p-4 bg-slime-500/10 rounded-xl w-fit mb-4">
-                            <i data-lucide="terminal" class="w-8 h-8 text-slime-500"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-3">Terminal Native</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">Built for terminal users. ST terminal, dmenu, and all the tools you need.</p>
-                    </div>
-                </div>
+          </div>
+          <div class="install-step">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-title">Flash to USB</div>
+              <div class="step-desc">Use dd or balenaEtcher to write the ISO to a USB drive (4GB+ recommended).</div>
+              <div class="code-block">
+                <span>dd if=slyme-os.iso of=/dev/sdX bs=4M status=progress</span>
+                <button class="code-copy" onclick="copyText(this,'dd if=slyme-os.iso of=/dev/sdX bs=4M status=progress')">copy</button>
+              </div>
             </div>
-        </section>
-
-        <div class="section-divider"></div>
-
-        <!-- SYSTEM MODULES -->
-        <section id="modules" class="py-16 sm:py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 sm:mb-12">
-                    <h2 class="text-3xl sm:text-4xl font-bold text-white flex items-center gap-4">
-                        <i data-lucide="cpu" class="text-slime-500 w-8 h-8 sm:w-10 sm:h-10"></i>
-                        SYSTEM MODULES
-                    </h2>
-                    <span class="text-xs sm:text-sm text-gray-500 font-mono px-3 py-1.5 bg-slime-900/20 rounded-lg border border-slime-900/40">/home/slyme/modules</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-6">
-                    
-                    <!-- LARGE CORE OS CARD -->
-                    <div class="group lg:col-span-2 lg:row-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/60 to-gray-900/40 border border-gray-800/60 hover:border-slime-500/60 transition-all duration-300 backdrop-blur-sm card-hover">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slime-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-slime-500/5 rounded-full blur-3xl group-hover:bg-slime-500/10 transition-all duration-500"></div>
-                        <div class="p-8 sm:p-10 h-full flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent relative z-10">
-                            <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-slime-900/70 text-slime-400 text-xs uppercase border border-slime-500/40 rounded-lg mb-5 w-fit backdrop-blur-sm">
-                                <i data-lucide="sparkles" class="w-3 h-3"></i>
-                                Core System
-                            </span>
-                            <h3 class="text-3xl sm:text-4xl font-bold text-white mb-4 group-hover:text-slime-400 transition-colors duration-300">Slyme OS</h3>
-                            <p class="text-gray-300 text-sm sm:text-base mb-8 max-w-md leading-relaxed">
-                                AI-optimized Linux built for speed, privacy, and local LLM inference. Minimalist. Powerful. Yours.
-                            </p>
-                            <a href="#home" class="inline-flex items-center gap-3 text-slime-500 hover:text-white font-bold uppercase tracking-wider text-sm group-hover:text-glow-soft transition-all duration-300">
-                                Explore <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- DWM -->
-                    <div class="relative rounded-2xl bg-gradient-to-br from-gray-900/50 to-gray-900/30 border border-gray-800/60 p-6 sm:p-8 flex flex-col justify-between hover:border-slime-500/60 transition-all duration-300 group card-hover backdrop-blur-sm">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slime-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                        <div class="relative z-10">
-                            <div class="p-3 bg-gray-800/50 rounded-xl w-fit group-hover:bg-slime-500/20 transition-colors duration-300">
-                                <i data-lucide="layout-dashboard" class="text-gray-400 group-hover:text-slime-500 w-8 h-8 sm:w-12 sm:h-12 transition-colors duration-300"></i>
-                            </div>
-                            <div class="mt-6">
-                                <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-slime-400 transition-colors duration-300">SLIWM / DWM</h3>
-                                <p class="text-xs sm:text-sm text-gray-400 mt-2 leading-relaxed">Dynamic tiling window manager. Patched for productivity.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DOCUMENTATION -->
-                    <a href="#" class="relative rounded-2xl bg-gradient-to-br from-gray-900/50 to-gray-900/30 border border-gray-800/60 p-6 sm:p-8 flex items-center gap-4 sm:gap-6 hover:border-slime-500/60 hover:bg-slime-900/10 transition-all duration-300 group card-hover backdrop-blur-sm">
-                        <div class="p-3 sm:p-4 bg-gray-800/60 rounded-xl group-hover:bg-slime-500 transition-colors duration-300 group-hover:scale-110">
-                            <i data-lucide="book-open" class="w-6 h-6 sm:w-8 sm:h-8 text-gray-300 group-hover:text-black transition-colors duration-300"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-lg sm:text-xl font-bold text-white group-hover:text-slime-400 transition-colors duration-300">Documentation</h3>
-                            <p class="text-xs sm:text-sm text-gray-400 mt-1">Guides, config, and build notes.</p>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-gray-600 group-hover:text-slime-500 ml-auto group-hover:translate-x-2 transition-all duration-300"></i>
-                    </a>
-
-                    <!-- TECH STACK -->
-                    <div class="lg:col-span-2 relative rounded-2xl bg-gradient-to-br from-gray-900/50 to-gray-900/30 border border-gray-800/60 p-6 sm:p-8 backdrop-blur-sm">
-                        <div class="flex items-center gap-3 mb-6">
-                            <i data-lucide="code" class="w-5 h-5 text-slime-500"></i>
-                            <h3 class="text-base sm:text-lg text-gray-300 uppercase tracking-widest">Core Stack</h3>
-                        </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                            <div class="px-3 sm:px-4 py-2.5 bg-gray-800/60 border border-gray-700/60 rounded-lg hover:bg-slime-500 hover:text-black hover:border-slime-500 transition-all duration-300 text-center text-xs sm:text-sm font-semibold cursor-pointer hover:scale-105">OLLAMA</div>
-                            <div class="px-3 sm:px-4 py-2.5 bg-gray-800/60 border border-gray-700/60 rounded-lg hover:bg-slime-500 hover:text-black hover:border-slime-500 transition-all duration-300 text-center text-xs sm:text-sm font-semibold cursor-pointer hover:scale-105">DWM</div>
-                            <div class="px-3 sm:px-4 py-2.5 bg-gray-800/60 border border-gray-700/60 rounded-lg hover:bg-slime-500 hover:text-black hover:border-slime-500 transition-all duration-300 text-center text-xs sm:text-sm font-semibold cursor-pointer hover:scale-105">ST</div>
-                            <div class="px-3 sm:px-4 py-2.5 bg-gray-800/60 border border-gray-700/60 rounded-lg hover:bg-slime-500 hover:text-black hover:border-slime-500 transition-all duration-300 text-center text-xs sm:text-sm font-semibold cursor-pointer hover:scale-105">DMENU</div>
-                            <div class="px-3 sm:px-4 py-2.5 bg-gray-800/60 border border-gray-700/60 rounded-lg hover:bg-slime-500 hover:text-black hover:border-slime-500 transition-all duration-300 text-center text-xs sm:text-sm font-semibold cursor-pointer hover:scale-105">OBSIDIAN</div>
-                            <div class="px-3 sm:px-4 py-2.5 bg-gray-800/60 border border-gray-700/60 rounded-lg hover:bg-slime-500 hover:text-black hover:border-slime-500 transition-all duration-300 text-center text-xs sm:text-sm font-semibold cursor-pointer hover:scale-105">LOCAL LLMs</div>
-                        </div>
-                    </div>
-
-                </div>
+          </div>
+          <div class="install-step">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-title">Boot & Install</div>
+              <div class="step-desc">Boot from USB. The terminal installer detects your GPU, selects optimal models, and sets up slyme-ai automatically.</div>
             </div>
-        </section>
-
-        <div class="section-divider"></div>
-
-        <!-- FOOTER -->
-        <footer class="py-12 sm:py-16 border-t border-gray-800/60">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-8">
-                    <p class="text-xs sm:text-sm text-gray-500 mb-6">
-                        &copy; 2025 Slyme-OS • Built for the terminal generation • 
-                        <span class="text-slime-900/60 font-mono">End of Transmission.</span>
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-6 sm:gap-8">
-                        <a href="https://www.instagram.com/slyme-os" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-400 hover:text-slime-500 transition-colors duration-300 text-sm group">
-                            <i data-lucide="instagram" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
-                            <span>Instagram</span>
-                        </a>
-                        <a href="#" class="flex items-center gap-2 text-gray-400 hover:text-slime-500 transition-colors duration-300 text-sm group">
-                            <i data-lucide="youtube" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
-                            <span>YouTube</span>
-                        </a>
-                        <a href="mailto:slyme@tutamail.com" class="flex items-center gap-2 text-gray-400 hover:text-slime-500 transition-colors duration-300 text-sm group">
-                            <i data-lucide="mail" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
-                            <span>Contact</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="mt-8 pt-6 border-t border-gray-900/50 text-center">
-                    <p class="text-xs text-gray-600 font-mono">
-                        <span class="text-slime-500">$</span> echo "Stay terminal. Stay free."
-                    </p>
-                </div>
+          </div>
+          <div class="install-step">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-title">First Boot</div>
+              <div class="step-desc">slyme-ai daemon starts automatically. Your shell, WM, and all tools are AI-ready immediately. No configuration needed.</div>
+              <div class="code-block">
+                <span>slyme-ai status</span>
+                <button class="code-copy" onclick="copyText(this,'slyme-ai status')">copy</button>
+              </div>
             </div>
-        </footer>
-    </main>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <div style="margin-bottom:1.5rem;">
+            <div class="section-label" style="margin-bottom:0.8rem;">Hardware Requirements</div>
+          </div>
+          <table class="hw-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Minimum</th>
+                <th>Recommended</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CPU</td>
+                <td>x86_64, 4 cores</td>
+                <td>8+ cores, AVX2</td>
+              </tr>
+              <tr>
+                <td>RAM</td>
+                <td>8GB</td>
+                <td>16GB+</td>
+              </tr>
+              <tr>
+                <td>VRAM</td>
+                <td>4GB <span class="hw-rec">(phi3:mini)</span></td>
+                <td>8GB+ <span class="hw-rec">(mistral:7b)</span></td>
+              </tr>
+              <tr>
+                <td>Storage</td>
+                <td>40GB SSD</td>
+                <td>100GB NVMe</td>
+              </tr>
+              <tr>
+                <td>GPU</td>
+                <td>Optional <span class="hw-rec">(CPU ok)</span></td>
+                <td>NVIDIA / AMD</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top:1.2rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
+            <span class="hw-badge">NVIDIA RTX 30/40xx ✓</span>
+            <span class="hw-badge">AMD RX 6000/7000 ✓</span>
+            <span class="hw-badge">CPU-only mode ✓</span>
+            <span class="hw-badge">Apple Silicon — Soon</span>
+          </div>
+          <div style="margin-top:2rem;padding:1.2rem;border:1px solid rgba(57,255,20,0.2);border-radius:6px;background:rgba(57,255,20,0.03);">
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.8;">
+              <strong style="color:var(--g);">No GPU?</strong> No problem. The installer detects your hardware and auto-selects the optimal model — phi3:mini on CPU-only systems runs at ~2 tok/s. Still useful, still private.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- SCROLL TO TOP BUTTON -->
-    <button id="scroll-top" class="fixed bottom-8 right-8 p-4 bg-slime-900/80 border border-slime-500/50 rounded-full text-slime-500 hover:bg-slime-500 hover:text-black transition-all duration-300 opacity-0 pointer-events-none z-50 backdrop-blur-sm">
-        <i data-lucide="arrow-up" class="w-6 h-6"></i>
-    </button>
+  <div class="sep"></div>
 
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+  <!-- ROADMAP -->
+  <section id="roadmap">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-label">Where We're Going</div>
+        <h2 class="section-title">Development <span>Roadmap</span></h2>
+        <p class="section-desc">18 months to the most AI-native Linux experience in existence. Each phase ships something real, not vaporware.</p>
+      </div>
+      <div class="roadmap-phases reveal">
+        <div class="phase">
+          <div class="phase-meta">
+            <div class="phase-tag">Phase 0</div>
+            <div class="phase-time">Now · Weeks 1–3</div>
+          </div>
+          <div class="phase-dot active"></div>
+          <div class="phase-content">
+            <div class="phase-title">Foundation — Cleanup & Community Launch</div>
+            <div class="phase-items">
+              <span class="phase-item">Real SHA256 verification</span>
+              <span class="phase-item">Documentation site</span>
+              <span class="phase-item">GitHub org + README</span>
+              <span class="phase-item">Hardware compat table</span>
+              <span class="phase-item">r/unixporn launch post</span>
+              <span class="phase-item">Demo video</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-meta">
+            <div class="phase-tag">Phase 1</div>
+            <div class="phase-time">Months 1–2</div>
+          </div>
+          <div class="phase-dot"></div>
+          <div class="phase-content">
+            <div class="phase-title">The AI Daemon & Shell Intelligence</div>
+            <div class="phase-items">
+              <span class="phase-item">slyme-ai daemon (Python/Go)</span>
+              <span class="phase-item">Unix socket API</span>
+              <span class="phase-item">Dual model routing</span>
+              <span class="phase-item">Natural language shell (!!) </span>
+              <span class="phase-item">Error explainer</span>
+              <span class="phase-item">Ghost suggestions</span>
+              <span class="phase-item">slyme-recap</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-meta">
+            <div class="phase-tag">Phase 2</div>
+            <div class="phase-time">Months 2–4</div>
+          </div>
+          <div class="phase-dot"></div>
+          <div class="phase-content">
+            <div class="phase-title">Window Manager & Clipboard Intelligence</div>
+            <div class="phase-items">
+              <span class="phase-item">Context-aware workspaces</span>
+              <span class="phase-item">AI Scratchpad (Super+Space)</span>
+              <span class="phase-item">Smart window titling</span>
+              <span class="phase-item">slyme-clip persistent clipboard</span>
+              <span class="phase-item">Semantic clipboard search</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-meta">
+            <div class="phase-tag">Phase 3</div>
+            <div class="phase-time">Months 3–5</div>
+          </div>
+          <div class="phase-dot"></div>
+          <div class="phase-content">
+            <div class="phase-title">Semantic File System</div>
+            <div class="phase-items">
+              <span class="phase-item">slyme-index embedding daemon</span>
+              <span class="phase-item">nomic-embed-text integration</span>
+              <span class="phase-item">SQLite vector store</span>
+              <span class="phase-item">slyme-find natural language search</span>
+              <span class="phase-item">ranger AI file summaries</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-meta">
+            <div class="phase-tag">Phase 4</div>
+            <div class="phase-time">Months 4–6</div>
+          </div>
+          <div class="phase-dot"></div>
+          <div class="phase-content">
+            <div class="phase-title">slyme.nvim — Editor Intelligence</div>
+            <div class="phase-items">
+              <span class="phase-item">Local LLM code completion</span>
+              <span class="phase-item">Inline error explainer</span>
+              <span class="phase-item">Git commit generator</span>
+              <span class="phase-item">Test writer</span>
+              <span class="phase-item">Refactor assistant</span>
+              <span class="phase-item">slyme-review PR reviewer</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-meta">
+            <div class="phase-tag">Phase 5</div>
+            <div class="phase-time">Months 6–9</div>
+          </div>
+          <div class="phase-dot"></div>
+          <div class="phase-content">
+            <div class="phase-title">System Intelligence & Polish</div>
+            <div class="phase-items">
+              <span class="phase-item">slyme-monitor TUI</span>
+              <span class="phase-item">Intelligent log analysis</span>
+              <span class="phase-item">Whisper voice interface</span>
+              <span class="phase-item">New terminal installer</span>
+              <span class="phase-item">Hardware auto-config</span>
+              <span class="phase-item">v2.0 launch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        // Typewriter effect
-        const typewriterText = "AI OPERATING SYSTEM";
-        const typeWriterElement = document.getElementById('typewriter');
-        let i = 0;
-        function typeWriter() {
-            if (i < typewriterText.length) {
-                typeWriterElement.innerHTML += typewriterText.charAt(i);
-                i++;
-                setTimeout(typeWriter, 100);
-            }
-        }
+  <div class="sep"></div>
 
-        // Clock update
-        function updateClock() {
-            const now = new Date();
-            const clockElement = document.getElementById('clock');
-            if (clockElement) {
-                clockElement.innerText = now.toLocaleTimeString('en-US', { hour12: false });
-            }
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+  <!-- PHILOSOPHY -->
+  <section style="padding:80px 2.5rem;">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-label">The Manifesto</div>
+        <h2 class="section-title">Why <span>Slyme OS</span> Exists</h2>
+      </div>
+      <div class="phil-grid">
+        <div class="phil-quote reveal">
+          <p class="phil-text">
+            The terminal generation was told AI means giving up privacy, paying monthly fees, and trusting corporations with their most sensitive work. We built Slyme OS to prove that's a <strong>lie</strong>.<br><br>
+            Intelligence should be <strong>local</strong>. Privacy should be <strong>absolute</strong>. Your tools should make you faster, not dependent. The future of computing is not cloud-first — it is <strong>yours-first</strong>.
+          </p>
+        </div>
+        <div class="phil-manifesto reveal reveal-delay-2">
+          <div class="manifesto-line"><span class="ml-check">✓</span> Local AI — no cloud, no keys, no accounts</div>
+          <div class="manifesto-line"><span class="ml-check">✓</span> Zero telemetry — your data never leaves your machine</div>
+          <div class="manifesto-line"><span class="ml-check">✓</span> Open source — read, fork, patch, own everything</div>
+          <div class="manifesto-line"><span class="ml-check">✓</span> Suckless — minimal, auditable, hackable source</div>
+          <div class="manifesto-line"><span class="ml-check">✓</span> Free base — core OS always free, forever</div>
+          <div class="manifesto-line"><span class="ml-no">✗</span> No subscriptions for core features</div>
+          <div class="manifesto-line"><span class="ml-no">✗</span> No corporate cloud AI backends</div>
+          <div class="manifesto-line"><span class="ml-no">✗</span> No bloat, no defaults you didn't choose</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        // Boot sequence
-        const bootScreen = document.getElementById('boot-screen');
-        const bootText = document.getElementById('boot-text');
-        const bootLog = [
-            "> INITIALIZING SLYME-OS CORE",
-            "> DEFEATING CORPORATE OVERLORDS",
-            "> COMPILING DWM PATCHES",
-            "> BOOSTING NEURAL PRODUCTIVITY",
-            "> LOADING LOCAL LLM SERVERS",
-            "> OLLAMA ONLINE",
-            "> GUI READY",
-            "> SYSTEM BOOTED SUCCESSFULLY",
-            "",
-            "> Welcome, hacker."
-        ];
+  <div class="sep"></div>
 
-        let line = 0;
-        function bootSequence() {
-            if (line < bootLog.length) {
-                bootText.innerHTML += bootLog[line] + "\n";
-                line++;
-                setTimeout(bootSequence, Math.random() * 400 + 200);
-            } else {
-                setTimeout(() => {
-                    bootScreen.style.opacity = '0';
-                    bootScreen.style.visibility = 'hidden';
-                    setTimeout(() => {
-                        bootScreen.style.display = 'none';
-                        typeWriter();
-                    }, 1500);
-                }, 1200);
-            }
-        }
+  <!-- COMMUNITY -->
+  <section class="community-section" id="community">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-label">Join the Movement</div>
+        <h2 class="section-title">Built for the <span>Terminal Generation</span></h2>
+        <p class="section-desc">Slyme OS is built by hackers, for hackers. Join the community building the most AI-native Linux distro in existence.</p>
+      </div>
+      <div class="community-grid">
+        <a href="https://github.com/slyme-os" target="_blank" rel="noopener" class="community-card reveal">
+          <span class="cc-icon">⌥</span>
+          <div class="cc-name">GitHub</div>
+          <div class="cc-desc">Source code, issue tracker, discussions, and contributions. Star the repo if you believe in local AI.</div>
+          <span class="cc-action">→ github.com/slyme-os</span>
+        </a>
+        <a href="https://www.instagram.com/slyme-os" target="_blank" rel="noopener" class="community-card reveal reveal-delay-1">
+          <span class="cc-icon">◎</span>
+          <div class="cc-name">Instagram</div>
+          <div class="cc-desc">Behind-the-scenes build log, terminal aesthetics, architecture diagrams, and OS progress updates.</div>
+          <span class="cc-action">→ @slyme-os</span>
+        </a>
+        <a href="mailto:slyme@tutamail.com" class="community-card reveal reveal-delay-2">
+          <span class="cc-icon">✉</span>
+          <div class="cc-name">Direct Contact</div>
+          <div class="cc-desc">Bug reports, collaboration proposals, enterprise inquiries, or just want to say what feature you need most.</div>
+          <span class="cc-action">→ slyme@tutamail.com</span>
+        </a>
+        <a href="https://github.com/slyme-os/discussions" target="_blank" rel="noopener" class="community-card reveal">
+          <span class="cc-icon">◈</span>
+          <div class="cc-name">Discussions</div>
+          <div class="cc-desc">Feature requests, architecture debates, config sharing, and community support. The main gathering place.</div>
+          <span class="cc-action">→ GitHub Discussions</span>
+        </a>
+        <a href="https://reddit.com/r/unixporn" target="_blank" rel="noopener" class="community-card reveal reveal-delay-1">
+          <span class="cc-icon">◉</span>
+          <div class="cc-name">r/unixporn</div>
+          <div class="cc-desc">Share your Slyme OS setup, see community rices, and discover new ways to configure your environment.</div>
+          <span class="cc-action">→ r/unixporn</span>
+        </a>
+        <a href="https://reddit.com/r/selfhosted" target="_blank" rel="noopener" class="community-card reveal reveal-delay-2">
+          <span class="cc-icon">◐</span>
+          <div class="cc-name">r/selfhosted</div>
+          <div class="cc-desc">The local AI and self-hosted community. Talk Ollama, local models, privacy tools, and Slyme OS integration.</div>
+          <span class="cc-action">→ r/selfhosted</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-        window.addEventListener('load', bootSequence);
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">SLYME<span>_</span>OS</div>
+        <p class="footer-desc">The world's most AI-native Linux distribution. Local LLM integration woven into every layer. Private by design. Yours forever.</p>
+        <div class="footer-social">
+          <a href="https://github.com/slyme-os" target="_blank" rel="noopener" class="social-link" title="GitHub">⌥</a>
+          <a href="https://www.instagram.com/slyme-os" target="_blank" rel="noopener" class="social-link" title="Instagram">◎</a>
+          <a href="mailto:slyme@tutamail.com" class="social-link" title="Email">✉</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="https://mega.nz/file/cYMBwAhY#wLxmW7zk2oimcmBCymngODZPVtWFtKEUxdAn3tLdjM4">Download ISO</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Community</div>
+        <ul class="footer-links">
+          <li><a href="https://github.com/slyme-os" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/slyme-os/discussions" target="_blank" rel="noopener">Discussions</a></li>
+          <li><a href="https://www.instagram.com/slyme-os" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://reddit.com/r/LocalLLaMA" target="_blank" rel="noopener">r/LocalLLaMA</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Project</div>
+        <ul class="footer-links">
+          <li><a href="https://github.com/slyme-os" target="_blank" rel="noopener">Source Code</a></li>
+          <li><a href="https://github.com/slyme-os" target="_blank" rel="noopener">Contributing</a></li>
+          <li><a href="https://github.com/slyme-os" target="_blank" rel="noopener">Changelog</a></li>
+          <li><a href="mailto:slyme@tutamail.com">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Slyme OS · Built for the terminal generation · Beta v0.9.9</div>
+      <div class="footer-cmd"><span>$</span> echo "Stay terminal. Stay free."</div>
+    </div>
+  </footer>
 
-        // Fallback for boot screen
-        setTimeout(() => {
-            if (bootScreen && bootScreen.style.display !== 'none') {
-                bootScreen.style.opacity = '0';
-                bootScreen.style.visibility = 'hidden';
-                setTimeout(() => { 
-                    bootScreen.style.display = 'none'; 
-                    typeWriter(); 
-                }, 1500);
-            }
-        }, 12000);
+</div><!-- /site -->
 
-        // Navbar scroll effect
-        const navbar = document.getElementById('navbar');
-        let lastScroll = 0;
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                navbar.style.background = 'rgba(5, 10, 5, 0.95)';
-                navbar.style.borderBottomColor = 'rgba(57, 255, 20, 0.3)';
-            } else {
-                navbar.style.background = 'rgba(5, 10, 5, 0.7)';
-                navbar.style.borderBottomColor = 'rgba(12, 26, 16, 0.5)';
-            }
-            
-            lastScroll = currentScroll;
-        });
+<script>
+/* ── MATRIX RAIN ── */
+(function(){
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, cols, drops;
+  const CHARS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ<>{}[]|¥¿§∆∑∏≈≠≤≥∞∂∇01';
+  function init(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cols = Math.floor(W / 18);
+    drops = Array(cols).fill(1).map(()=>Math.random()*-100);
+  }
+  function draw(){
+    ctx.fillStyle = 'rgba(3,7,3,0.05)';
+    ctx.fillRect(0,0,W,H);
+    ctx.font = '13px JetBrains Mono, monospace';
+    for(let i=0;i<drops.length;i++){
+      const ch = CHARS[Math.floor(Math.random()*CHARS.length)];
+      const bright = drops[i] < 3;
+      ctx.fillStyle = bright ? '#ffffff' : (Math.random() > 0.98 ? '#7fff00' : '#39ff14');
+      ctx.globalAlpha = bright ? 0.9 : 0.5 + Math.random()*0.3;
+      ctx.fillText(ch, i*18, drops[i]*18);
+      ctx.globalAlpha = 1;
+      if(drops[i]*18 > H && Math.random() > 0.97) drops[i] = 0;
+      drops[i] += 0.5;
+    }
+  }
+  init();
+  window.addEventListener('resize', init);
+  setInterval(draw, 50);
+})();
 
-        // Scroll to top button
-        const scrollTopBtn = document.getElementById('scroll-top');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                scrollTopBtn.style.opacity = '1';
-                scrollTopBtn.style.pointerEvents = 'auto';
-            } else {
-                scrollTopBtn.style.opacity = '0';
-                scrollTopBtn.style.pointerEvents = 'none';
-            }
-        });
+/* ── BOOT SEQUENCE ── */
+(function(){
+  const bootEl = document.getElementById('boot');
+  const textEl = document.getElementById('boot-text');
+  const barFill = document.getElementById('boot-bar-fill');
+  const lines = [
+    {t:'SLYME OS v0.9.9 — AI-NATIVE LINUX', cls:''},
+    {t:'Copyright © 2025 Slyme OS Project', cls:'dim'},
+    {t:'', cls:'dim'},
+    {t:'[    0.000] Initializing Zen kernel 6.6.67-zen1-1-zen ...', cls:'dim'},
+    {t:'[    0.124] CPU: 8 cores · AVX2 · x86_64', cls:'dim'},
+    {t:'[    0.281] Memory: 16GB DDR5 detected', cls:'dim'},
+    {t:'[    0.412] GPU: NVIDIA RTX 4060 (8GB VRAM) — CUDA enabled', cls:''},
+    {t:'[    0.831] Loading suckless core — DWM + ST + DMENU ...', cls:'dim'},
+    {t:'[    1.044] SLIWM window manager compiled & patched', cls:''},
+    {t:'[    1.237] Starting Ollama daemon ...', cls:'dim'},
+    {t:'[    1.502] Ollama: mistral:7b-instruct loaded (4.1GB VRAM)', cls:''},
+    {t:'[    1.621] Ollama: phi3:mini loaded (fast path, 1.1GB VRAM)', cls:''},
+    {t:'[    2.003] Starting slyme-ai daemon ...', cls:'dim'},
+    {t:'[    2.114] slyme-ai: socket ready at /run/slyme-ai.sock', cls:''},
+    {t:'[    2.203] slyme-ai: context engine ONLINE', cls:''},
+    {t:'[    2.401] slyme-index: embedding daemon started', cls:'dim'},
+    {t:'[    2.519] slyme-clip: clipboard AI ACTIVE', cls:'dim'},
+    {t:'[    2.788] Shell hooks installed — slyme-shell READY', cls:''},
+    {t:'', cls:''},
+    {t:'● ALL SYSTEMS ONLINE — AI INFERENCE READY', cls:''},
+    {t:'', cls:''},
+    {t:'> Welcome, hacker. Stay terminal. Stay free.', cls:''},
+  ];
 
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+  let i=0;
+  function next(){
+    if(i>=lines.length){
+      barFill.style.width='100%';
+      setTimeout(()=>{
+        bootEl.classList.add('hidden');
+      },800);
+      return;
+    }
+    const div=document.createElement('div');
+    div.className='boot-line '+lines[i].cls;
+    div.textContent=lines[i].t||' ';
+    textEl.appendChild(div);
+    requestAnimationFrame(()=>{ div.classList.add('show'); });
+    i++;
+    barFill.style.width=(i/lines.length*100)+'%';
+    const delay=lines[i-1].t==='' ? 80 : Math.random()*120+60;
+    setTimeout(next,delay);
+  }
+  setTimeout(next,400);
+  // Safety fallback
+  setTimeout(()=>bootEl.classList.add('hidden'),12000);
+})();
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+/* ── NAV SCROLL ── */
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  navbar.classList.toggle('scrolled',window.scrollY>60);
+  const btn=document.getElementById('scrolltop');
+  btn.classList.toggle('visible',window.scrollY>400);
+});
 
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+/* ── REVEAL ON SCROLL ── */
+const reveals=document.querySelectorAll('.reveal');
+const ro=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(el=>ro.observe(el));
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+/* ── COPY CODE ── */
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.textContent;
+    btn.textContent='✓ copied';
+    btn.style.color='var(--g)';
+    setTimeout(()=>{ btn.textContent=orig; btn.style.color=''; },1500);
+  });
+}
 
-        // Observe feature cards
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Mobile menu toggle (if needed in future)
-        const menuToggle = document.getElementById('menu-toggle');
-        if (menuToggle) {
-            menuToggle.addEventListener('click', () => {
-                // Add mobile menu functionality here if needed
-            });
-        }
-
-        // Re-initialize icons after dynamic content
-        setInterval(() => {
-            lucide.createIcons();
-        }, 1000);
-    </script>
+/* ── SMOOTH ANCHOR SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const target=document.querySelector(a.getAttribute('href'));
+    if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+</script>
 </body>
 </html>
